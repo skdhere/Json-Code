@@ -28,14 +28,14 @@
                 <div class="col-md-6 text-center pb-3">
                     <h6>Operators</h6>
                     <ul class="list-group">
-                        <li class="list-group-item">
+                        <li class="list-group-item draggable">
                             <a href="javascript:void(0)" onclick="getAppendData('op_multiply', 'hid_op_multiply_count');">X</a>
                             <input type="hidden" name="hid_op_multiply_count" id="hid_op_multiply_count" value="0">
                         </li>
-                        <li class="list-group-item">/</li>
-                        <li class="list-group-item">+</li>
-                        <li class="list-group-item">-</li>
-                        <li class="list-group-item">%</li>
+                        <li class="list-group-item draggable">/</li>
+                        <li class="list-group-item draggable">+</li>
+                        <li class="list-group-item draggable">-</li>
+                        <li class="list-group-item draggable">%</li>
                     </ul>
                 </div>
             </div>
@@ -44,13 +44,13 @@
                 <h6>Enum Types</h6>
                 <ul class="list-group ">
                     <li class="list-group-item">
-                        <a href="javascript:void(0)" onclick="getAppendData('bb_mixed_fraction', 'hid_bb_mixed_fraction_count');">
+                        <a href="javascript:void(0)" class="draggable" onclick="getAppendData('bb_mixed_fraction', 'hid_bb_mixed_fraction_count');">
                             Mixed Fraction
                         </a>
                         <input type="hidden" name="hid_bb_mixed_fraction_count" id="hid_bb_mixed_fraction_count" value="0">
                     </li>
                     <li class="list-group-item">
-                        <a href="javascript:void(0)" onclick="getAppendData('bb_improper_fraction', 'hid_bb_improper_fraction_count');">
+                        <a href="javascript:void(0)" class="draggable" onclick="getAppendData('bb_improper_fraction', 'hid_bb_improper_fraction_count');">
                             Improper Fraction
                         </a>
                         <input type="hidden" name="hid_bb_improper_fraction_count" id="hid_bb_improper_fraction_count" value="0">
@@ -66,7 +66,7 @@
           </div>
         </div>
         <div class="col-md-7">
-            <div id="div_editor_contain" class="col-md-12" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:scroll;">
+            <div id="div_editor_contain" class="col-md-12 droppable" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:scroll;">
                 <div id="div_step_1" class="row p-3">
                     <div class="col-md-12">
                         <span class="badge badge-info badge-pill">Step 1:</span>
@@ -94,9 +94,37 @@
     </div>
 </div>
     <script src="js/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript">
+         $( function() {
+
+            $('.draggable').draggable({
+              revert: "invalid",
+              stack: ".draggable",
+              helper: 'clone'
+            });
+            $('.droppable').droppable({
+              accept: ".draggable",
+              drop: function(event, ui) {
+                var droppable = $(this);
+                var draggable = ui.draggable;
+                // Move draggable into droppable
+                var drag = $('.droppable').has(ui.draggable).length ? draggable : draggable.clone().draggable({
+                  revert: "invalid",
+                  stack: ".draggable",
+                  helper: 'clone'
+                });
+                drag.appendTo(droppable);
+                draggable.css({
+                  float: 'left'
+                });
+              }
+            });
+
+         });
+        
         function getAppendData(param_val, hid_val)
         {
             var txt_hid_val = parseInt($('#'+hid_val).val());
