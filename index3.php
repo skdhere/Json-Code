@@ -51,13 +51,13 @@ session_destroy();
                 <h6>Enum Types</h6>
                 <ul class="list-group ">
                     <li class="list-group-item">
-                        <a href="javascript:void(0)" class="draggable" onclick="getAppendData('bb_mixed_fraction', 'hid_bb_mixed_fraction_count');">
+                        <a href="javascript:void(0)" class="draggable" onclick="Mixed('bb_mixed_fraction', 'hid_bb_mixed_fraction_count');">
                             Mixed Fraction
                         </a>
                         <input type="hidden" name="hid_bb_mixed_fraction_count" id="hid_bb_mixed_fraction_count" value="0">
                     </li>
                     <li class="list-group-item">
-                        <a href="javascript:void(0)" class="draggable" onclick="getAppendData('bb_improper_fraction', 'hid_bb_improper_fraction_count');">
+                        <a href="javascript:void(0)" class="draggable" onclick="Improper('bb_improper_fraction', 'hid_bb_improper_fraction_count');">
                             Improper Fraction
                         </a>
                         <input type="hidden" name="hid_bb_improper_fraction_count" id="hid_bb_improper_fraction_count" value="0">
@@ -73,7 +73,7 @@ session_destroy();
           </div>
         </div>
         <div class="col-md-7">
-            <div id="div_editor_contain" class="col-md-12 droppable" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:scroll;">
+            <div id="div_editor_contain" class="col-md-12 droppable" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:auto;">
                 <div id="div_step_1" class="row p-3">
                     <div class="col-md-12">
                         <span class="badge badge-info badge-pill">Step 1:</span>
@@ -211,7 +211,7 @@ session_destroy();
                 $('#div_step_'+current_step_count).remove();
             }
         }
-
+        
         function changeCurrentStepCount()
         {
             ar = [];
@@ -262,6 +262,85 @@ session_destroy();
             data = "<hr><div id='div_step_"+new_step_count+"' class='row p-3'><div class='col-md-12'><span class='badge badge-info badge-pill'>Step "+new_step_count+":</span></div></div>";
             $('#div_editor_contain').append(data);
         }
+
+    function Improper(param_val, hid_val)
+    {
+        var current_step_count = parseInt($('#hid_current_step_count').val());
+        var html = '';
+        var txt_hid_val = parseInt($('#'+hid_val).val());
+        txt_hid_val     = parseInt(txt_hid_val) + 1;
+        $('#'+hid_val).val(txt_hid_val);
+
+        if ($('#div_step_'+current_step_count).find('div').length == 0)
+        {
+           current_step_count = current_step_count - 1;
+           $('#hid_current_step_count').val(current_step_count);
+           $('#'+hid_val).val(0);
+           alert("please add the step first!");
+           return false;
+        }
+        
+         // alert($('#div_step_'+current_step_count).find('div').length);
+         // if ($('#div_step_'+current_step_count).find('div').length == 1)
+         // {
+         //    // $('#div_step_'+current_step_count).remove();
+         // }
+
+        html += '<div id="tbl_bb_improper_frac_'+txt_hid_val+'" class="col-md-5">';
+            html += '<div>';
+                html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_improper_frac_'+txt_hid_val+'\', '+current_step_count+');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+            html += '</div>';
+            html += '<table>';
+                html += '<tr>';
+                    html += '<td>';
+                        html += '<div><input type="" class="form-control" name=""></div>';
+                        html += '<hr>';
+                        html += '<div><input type="" class="form-control" name=""></div>';
+                    html += '</td>';
+                html += '</tr>';
+            html += '</table>';  
+        html += '</div>';
+
+        $('#div_step_'+current_step_count).append(html);
+    }
+
+    function Mixed(param_val, hid_val)
+    {
+        var current_step_count = parseInt($('#hid_current_step_count').val());
+        var html = '';
+        var txt_hid_val = parseInt($('#'+hid_val).val());
+        txt_hid_val     = parseInt(txt_hid_val) + 1;
+        $('#'+hid_val).val(txt_hid_val);
+
+        if ($('#div_step_'+current_step_count).find('div').length == 0)
+        {
+           current_step_count = current_step_count - 1;
+           $('#hid_current_step_count').val(current_step_count);
+           $('#'+hid_val).val(0);
+           alert("please add the step first!");
+           return false;
+        }
+        
+        html += '<div id="tbl_bb_frac_'+txt_hid_val+'" class="col-md-5">';
+            html += '<div>';
+                html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_frac_'+txt_hid_val+'\', '+current_step_count+');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+            html += '</div>';
+            html += '<table>';
+                html += '<tr>';
+                    html += '<td>';
+                        html += '<div><input type="" class="form-control" name=""></div>';
+                    html += '</td>';
+                    html += '<td>';
+                        html += '<div><input type="" class="form-control" name=""></div>';
+                        html += '<hr>';
+                        html += '<div><input type="" class="form-control" name=""></div>';
+                    html += '</td>';
+                html += '</tr>';
+            html += '</table>';  
+        html += '</div>';
+
+        $('#div_step_'+current_step_count).append(html);
+    }
     </script>
     <script type="text/javascript" src="js/ASCII.js"></script>
 </body>
