@@ -62,7 +62,7 @@ session_destroy();
                         </a>
                         <input type="hidden" name="hid_bb_improper_fraction_count" id="hid_bb_improper_fraction_count" value="0">
                     </li>
-                    <li class="list-group-item">BB 3</li>
+                    <li class="list-group-item" onclick="customBlock()">BB 3</li>
                 </ul>
             </div>
             <div class="col-md-6 text-center">
@@ -135,10 +135,10 @@ session_destroy();
 
          });
         
-        var jsonArr   = [];
+        var jsonArr  = [];
         var mainArr  = [];
-        current_step  = 1;
-        ar            = {}
+        current_step = 1;
+        ar           = {}
         function createJson(current_step_count,param_val,txt_hid_val)
         {
             if(current_step_count !=current_step)
@@ -233,8 +233,9 @@ session_destroy();
                 // console.log(mainArr[i][0]);
                 var n ='step'+ (i+1);
                 console.log(n);
-                // console.log(JSON.parse(mainArr[i]))
-                console.log(mainArr[i].step+(i+1));
+                console.log(JSON.stringify(mainArr[i]))
+                console.log(mainArr[i].step1);
+                console.log(mainArr[i].n);
                 console.log('===============');
             }
 
@@ -258,90 +259,167 @@ session_destroy();
            
             new_step_count         = parseInt(current_step_count) + 1;
             $('#hid_current_step_count').val(new_step_count);
-            // data = "<div style='clear: both;'></div><div id='div_step_"+new_step_count+"'>Step-"+new_step_count+"</div>";
+            
             data = "<hr><div id='div_step_"+new_step_count+"' class='row p-3'><div class='col-md-12'><span class='badge badge-info badge-pill'>Step "+new_step_count+":</span></div></div>";
             $('#div_editor_contain').append(data);
         }
 
-    function Improper(param_val, hid_val)
-    {
-        var current_step_count = parseInt($('#hid_current_step_count').val());
-        var html = '';
-        var txt_hid_val = parseInt($('#'+hid_val).val());
-        txt_hid_val     = parseInt(txt_hid_val) + 1;
-        $('#'+hid_val).val(txt_hid_val);
-
-        if ($('#div_step_'+current_step_count).find('div').length == 0)
+        function Improper(param_val, hid_val)
         {
-           current_step_count = current_step_count - 1;
-           $('#hid_current_step_count').val(current_step_count);
-           $('#'+hid_val).val(0);
-           alert("please add the step first!");
-           return false;
-        }
-        
-         // alert($('#div_step_'+current_step_count).find('div').length);
-         // if ($('#div_step_'+current_step_count).find('div').length == 1)
-         // {
-         //    // $('#div_step_'+current_step_count).remove();
-         // }
+            var current_step_count = parseInt($('#hid_current_step_count').val());
+            var html               = '';
+            var txt_hid_val        = parseInt($('#'+hid_val).val());
+            txt_hid_val            = parseInt(txt_hid_val) + 1;
+            $('#'+hid_val).val(txt_hid_val);
 
-        html += '<div id="tbl_bb_improper_frac_'+txt_hid_val+'" class="col-md-5">';
-            html += '<div>';
-                html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_improper_frac_'+txt_hid_val+'\', '+current_step_count+');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+            if ($('#div_step_'+current_step_count).find('div').length == 0)
+            {
+               current_step_count = current_step_count - 1;
+               $('#hid_current_step_count').val(current_step_count);
+               $('#'+hid_val).val(0);
+               alert("please add the step first!");
+               return false;
+            }
+            
+
+            var sendInfo = {"param_val":param_val, "txt_hid_val":txt_hid_val, "current_step_count":current_step_count, "getHtml":1,"jsonArr":jsonArr};
+            var get_HTML = JSON.stringify(sendInfo);
+            $.ajax({
+                url: "load_index.php?",
+                type: "POST",
+                data: get_HTML,
+                contentType: "application/json; charset=utf-8",                     
+                success: function(response) 
+                {
+                    data = JSON.parse(response);
+                    
+                },
+                error: function (request, status, error) 
+                {},
+                complete: function()
+                {}
+            });
+            createJson(current_step_count,param_val,txt_hid_val);
+            
+            html += '<div id="tbl_bb_improper_frac_'+txt_hid_val+'" class="col-md-5">';
+                html += '<div>';
+                    html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_improper_frac_'+txt_hid_val+'\', '+current_step_count+');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                html += '</div>';
+                html += '<table>';
+                    html += '<tr>';
+                        html += '<td>';
+                            html += '<div><input type="" class="form-control" name=""></div>';
+                            html += '<hr>';
+                            html += '<div><input type="" class="form-control" name=""></div>';
+                        html += '</td>';
+                    html += '</tr>';
+                html += '</table>';  
             html += '</div>';
-            html += '<table>';
-                html += '<tr>';
-                    html += '<td>';
-                        html += '<div><input type="" class="form-control" name=""></div>';
-                        html += '<hr>';
-                        html += '<div><input type="" class="form-control" name=""></div>';
-                    html += '</td>';
-                html += '</tr>';
-            html += '</table>';  
-        html += '</div>';
 
-        $('#div_step_'+current_step_count).append(html);
-    }
+            $('#div_step_'+current_step_count).append(html);
+        }
 
-    function Mixed(param_val, hid_val)
-    {
-        var current_step_count = parseInt($('#hid_current_step_count').val());
-        var html = '';
-        var txt_hid_val = parseInt($('#'+hid_val).val());
-        txt_hid_val     = parseInt(txt_hid_val) + 1;
-        $('#'+hid_val).val(txt_hid_val);
-
-        if ($('#div_step_'+current_step_count).find('div').length == 0)
+        function Mixed(param_val, hid_val)
         {
-           current_step_count = current_step_count - 1;
-           $('#hid_current_step_count').val(current_step_count);
-           $('#'+hid_val).val(0);
-           alert("please add the step first!");
-           return false;
-        }
-        
-        html += '<div id="tbl_bb_frac_'+txt_hid_val+'" class="col-md-5">';
-            html += '<div>';
-                html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_frac_'+txt_hid_val+'\', '+current_step_count+');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
-            html += '</div>';
-            html += '<table>';
-                html += '<tr>';
-                    html += '<td>';
-                        html += '<div><input type="" class="form-control" name=""></div>';
-                    html += '</td>';
-                    html += '<td>';
-                        html += '<div><input type="" class="form-control" name=""></div>';
-                        html += '<hr>';
-                        html += '<div><input type="" class="form-control" name=""></div>';
-                    html += '</td>';
-                html += '</tr>';
-            html += '</table>';  
-        html += '</div>';
+            var current_step_count = parseInt($('#hid_current_step_count').val());
+            var html               = '';
+            var txt_hid_val        = parseInt($('#'+hid_val).val());
+            txt_hid_val            = parseInt(txt_hid_val) + 1;
+            $('#'+hid_val).val(txt_hid_val);
 
-        $('#div_step_'+current_step_count).append(html);
-    }
-    </script>
+            if ($('#div_step_'+current_step_count).find('div').length == 0)
+            {
+               current_step_count = current_step_count - 1;
+               $('#hid_current_step_count').val(current_step_count);
+               $('#'+hid_val).val(0);
+               alert("please add the step first!");
+               return false;
+            }
+
+            var sendInfo = {"param_val":param_val, "txt_hid_val":txt_hid_val, "current_step_count":current_step_count, "getHtml":1,"jsonArr":jsonArr};
+
+            var get_HTML = JSON.stringify(sendInfo);
+            $.ajax({
+                url: "load_index.php?",
+                type: "POST",
+                data: get_HTML,
+                contentType: "application/json; charset=utf-8",                     
+                success: function(response) 
+                {
+                    data = JSON.parse(response);
+                },
+                error: function (request, status, error) 
+                {},
+                complete: function()
+                {}
+            });      
+
+            createJson(current_step_count,param_val,txt_hid_val);
+            html += '<div id="tbl_bb_frac_'+txt_hid_val+'" class="col-md-5">';
+                html += '<div>';
+                    html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_frac_'+txt_hid_val+'\', '+current_step_count+');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                html += '</div>';
+                html += '<table>';
+                    html += '<tr>';
+                        html += '<td>';
+                            html += '<div><input type="" class="form-control" name=""></div>';
+                        html += '</td>';
+                        html += '<td>';
+                            html += '<div><input type="" class="form-control" name=""></div>';
+                            html += '<hr>';
+                            html += '<div><input type="" class="form-control" name=""></div>';
+                        html += '</td>';
+                    html += '</tr>';
+                html += '</table>';  
+            html += '</div>';
+
+            $('#div_step_'+current_step_count).append(html);
+        }
+
+        function customBlock()
+        {
+            var n = prompt("Number of numerator");
+            var d = prompt("Number of denominator");
+
+            if(isNaN(n) || isNaN(n))
+            {
+                alert('numerator and denominator are not valid');
+                customBlock();
+                return false;
+            }
+
+            var o = prompt("Operator");
+
+            var html ='';
+
+            html +='<div style="text-align: center;" class="col-md-5">';
+            html +='<div>'
+            for(var i = 1;i<=n;i++)
+            {
+                html +='<input type="text" style="width:20px"/> ';
+                if(i !=n)
+                {
+                    html +=' '+o+' ';
+                }
+            }
+            html +='</div>'
+            html +='<hr>';
+             html +='<div>';
+            for(var i = 1;i<=d;i++)
+            {
+                html +='<input type="text" style="width:20px"/> ';
+                if(i !=d)
+                {
+                    html +=' '+o+' ';
+                }
+            }
+             html +='</div>'
+             html +='</div>'
+             var current_step_count = parseInt($('#hid_current_step_count').val());
+            $('#div_step_'+current_step_count).append(html);
+        }
+
+        </script>
     <script type="text/javascript" src="js/ASCII.js"></script>
 </body>
 </html>

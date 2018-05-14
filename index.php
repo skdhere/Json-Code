@@ -212,6 +212,7 @@ session_destroy();
             }
         }
 
+        
         function changeCurrentStepCount()
         {
             ar = [];
@@ -236,6 +237,9 @@ session_destroy();
                 // console.log(JSON.parse(mainArr[i]))
                 console.log(mainArr[i].step+(i+1));
                 console.log('===============');
+                
+                JSON.parse(JSONString);
+
             }
 
             $.ajax({
