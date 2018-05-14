@@ -72,7 +72,6 @@
 		return $html_data;
 	}
 
-
 	if(@$_POST['test']==1)
 	{
 		$array = [];
@@ -84,9 +83,9 @@
 		// $array['step1']          = $a;
 		
 		
-		$mainArr                  =   $_SESSION['mainArr'];
-
-		$array['step'.(sizeof($mainArr)+1)]          =   $_SESSION['jsonArr'];
+		$mainArr                            =   $_SESSION['mainArr'];
+		
+		$array['step'.(sizeof($mainArr)+1)] =   $_SESSION['jsonArr'];
 		
 		
 		$_SESSION['mainArr']  = [];
@@ -129,7 +128,6 @@
 		exit();
 	}
 
-
 	function test($current_step_count,$param_val,$txt_hid_val)
 	{
 		if(!isset($_SESSION['jsonArr']))
@@ -171,6 +169,4 @@
 
 		// print_r($_SESSION);
 	}
-
-
 ?>
