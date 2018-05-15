@@ -11,4 +11,4 @@ except:
 result = {'status': 'Yes!'}
 
 # Send it to stdout (to PHP)
-print json.dumps(result)
+print json.dump(result)
