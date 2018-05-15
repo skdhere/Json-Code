@@ -77,7 +77,9 @@ session_destroy();
                 <div id="div_qtype" class="row p-3">
                     
                 </div>
-
+                <div id="div_qtype_solution" class="row p-3">
+                    
+                </div>
                 <!-- <div id="div_step_1" class="row p-3">
                     <div class="col-md-12">
                         <span class="badge badge-info badge-pill">Step 1:</span>
@@ -89,13 +91,13 @@ session_destroy();
         <div class="col-md-2">
             <div class="col-md-12" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px">
                 <button class="btn btn-primary btn-block m-1">Add Initiations</button>
-                <button class="btn btn-primary btn-block m-1">Add Result</button>
+                <button class="btn btn-primary btn-block m-1" >Add Result</button>
                 <button class="btn btn-primary btn-block m-1" onclick="changeCurrentStepCount();">
                     Add Steps
                 </button>
                 <input type="hidden" name="hid_cont_add_step_count" id="hid_cont_add_step_count" value="0">
-                <input type="hidden" name="hid_current_step_count" id="hid_current_step_count" value="1">
-                <button class="btn btn-primary btn-block m-1">Add Solutions</button>
+                <!-- <input type="hidden" name="hid_current_step_count" id="hid_current_step_count" value="1"> -->
+                <button class="btn btn-primary btn-block m-1" onclick="addSolution();">Add Solutions</button>
                 <hr>
                 <button class="btn btn-primary btn-block m-1">View Qtype</button>
                 <button class="btn btn-primary btn-block m-1" onclick="setObject()">New Qtype</button>
@@ -119,7 +121,7 @@ session_destroy();
               "Question": [],
               "Solution":[],
             }
-        isSoltion = false;
+        isSoltion = 0;
         enumCount = 0;
 
         $( function() {
@@ -146,10 +148,7 @@ session_destroy();
                 });
               }
             });
-
-         });
-
-        
+        });
         
        //set blank when adding new question type
 
@@ -163,18 +162,22 @@ session_destroy();
             var hid_newqtypeflag = $('#hid_newqtypeflag').val();
             if(hid_newqtypeflag == 0)
             {
-                $('#hid_newqtypeflag').val(1);
                 var QTypeName = prompt("Please Enter QType Name:");
-                $('#div_qtype').html('<div class="col-md-12"><span class="badge badge-info badge-pill">QType: </span><span id="qtype_name">'+QTypeName+'</span></div>');
-                
-                ar = {
-                  "QType": 1,
-                  "Qtype_Name": "Multiplication of 2 Mixed fraction",
-                  "Question": [],
-                  "Solution":[],
-                }    
-                ar.Qtype_Name = QTypeName;
-                console.log(ar);
+                // console.log(QTypeName);
+                if (QTypeName != null)
+                {
+                    $('#hid_newqtypeflag').val(1);
+                    $('#div_qtype').html('<div class="col-md-12"><span class="badge badge-info badge-pill">QType: </span><span id="qtype_name">'+QTypeName+'</span></div>');
+                    
+                    ar = {
+                      "QType": 1,
+                      "Qtype_Name": "Multiplication of 2 Mixed fraction",
+                      "Question": [],
+                      "Solution":[],
+                    }    
+                    ar.Qtype_Name = QTypeName;
+                    console.log(ar);   
+                }
             }
             else
             {
@@ -182,8 +185,8 @@ session_destroy();
             }
         }
         
-        function checkParamType(param_val){
-
+        function checkParamType(param_val)
+        {
             console.log(param_val);
             if(param_val=='bb_improper_fraction')
             {
@@ -194,7 +197,6 @@ session_destroy();
                      "D"   : "",
                      "W"   : "1"
                     }
-
             }else if(param_val=='bb_mixed_fraction')
             {
                 b = {
@@ -210,7 +212,6 @@ session_destroy();
                      "Type": "operator"
                  }
             }
-
             return b;
         }
 
@@ -227,7 +228,28 @@ session_destroy();
             console.log(arr);
         }
 
-        function getRmElement(element_id, btnCount)
+        function getSolutionArray()
+        {
+            solutionData =  {
+                                "Steps": [],
+                            }
+            return solutionData;
+        }
+
+        function createSolutionJson()
+        {
+            solutionData = getSolutionArray();
+
+            ar.Solution.push(solutionData);
+
+            console.log(ar);
+            $('#jasonData').html(ar);
+            arr = JSON.stringify(ar);
+            $('#jasonData').html(arr);
+            console.log(arr);
+        }
+
+        function getRmElement(btnCount)
         {
             $('#div'+btnCount).remove();
             var len = (ar.Question.length) - 1;
@@ -248,6 +270,44 @@ session_destroy();
             $('#div_editor_contain').append(data);
         }
 
+        function addSolution()
+        {
+            var hid_newqtypeflag = $('#hid_newqtypeflag').val();
+            if(hid_newqtypeflag != 0)
+            {
+                console.log($('#div_qtype').find('div').length);
+                if( $('#div_qtype').find('div').length > 1)
+                {
+                    if(hid_newqtypeflag != 2)
+                    {
+                        $('#hid_newqtypeflag').val(2);
+                    }
+
+                    html_data = '<div class="col-md-12" style="height:30px;background-color:#116cff;color:#FFF;">';
+                        html_data += 'Display Solution';
+                    html_data += '</div>';
+                    html_data += '<div id="div_step_1" class="row p-3">';
+                        html_data += '<div class="col-md-12">';
+                            html_data += '<span class="badge badge-info badge-pill">Step 1:</span>';
+                        html_data += '</div>';
+                    html_data += '</div>';
+                    createSolutionJson();
+                    $('#div_qtype_solution').append(html_data); 
+                    isSoltion++;
+                }
+                else
+                {
+                    alert('Sorry, Please add Question Type first!');
+                }
+
+                   
+            }
+            else
+            {
+                alert('Sorry, Please add QType first!');
+            }
+        }
+
         function Improper(param_val, hid_val)
         {
             var current_step_count = parseInt($('#hid_current_step_count').val());
@@ -264,8 +324,8 @@ session_destroy();
                 createJson(param_val);
                 
                 html += '<div id="div'+enumCount+'" class="col-md-5">';
-                    html += '<div>';
-                        html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_improper_frac_'+txt_hid_val+'\', '+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                    html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
+                        html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                     html += '</div>';
                     html += '<table>';
                         html += '<tr>';
@@ -279,21 +339,14 @@ session_destroy();
                 html += '</div>';
 
                 $('.rmBtn').css('display','none');
-                if(hid_newqtypeflag == 1)
-                {
-                    $('#div_qtype').append(html);
-                }
-                else
-                {
-
-                }
+                // enumCount1 = enumCount - 1; 
+                // $('#cancel_div'+enumCount1).empty();
+                $('#div_qtype').append(html);
             }
             else
             {
                 alert('Sorry, You have to add QType First!');
             }
-
-            
         }
 
         function Mixed(param_val, hid_val)
@@ -311,8 +364,8 @@ session_destroy();
                 enumCount++;
                 createJson(param_val);
                 html += '<div id="div'+enumCount+'" class="col-md-5">';
-                    html += '<div>';
-                        html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_frac_'+txt_hid_val+'\', '+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                    html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
+                        html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                     html += '</div>';
                     html += '<table>';
                         html += '<tr>';
@@ -329,14 +382,9 @@ session_destroy();
                 html += '</div>';
 
                 $('.rmBtn').css('display','none');
-                if(hid_newqtypeflag == 1)
-                {
-                    $('#div_qtype').append(html);
-                }
-                else
-                {
-
-                }
+                // enumCount1 = enumCount - 1; 
+                // $('#cancel_div'+enumCount1).empty().html('&nbsp;');
+                $('#div_qtype').append(html);
             }
             else
             {
@@ -363,8 +411,8 @@ session_destroy();
                 html_data = '';
 
                 html_data += '<div id="div'+enumCount+'" class="col-md-2" align="center">';
-                    html_data += '<div>';
-                        html_data += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_op_multi_'+txt_hid_val+'\', '+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                    html_data += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
+                        html_data += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                     html_data += '</div>';
                     html_data += '<table>';
                         html_data += '<tr>';
@@ -378,15 +426,9 @@ session_destroy();
                 html_data += '</div>';
 
                 $('.rmBtn').css('display','none');
-                if(hid_newqtypeflag == 1)
-                {
-                    $('#div_qtype').append(html_data);    
-                }
-                else
-                {
-
-                }
-                
+                // enumCount1 = enumCount - 1; 
+                // $('#cancel_div'+enumCount1).empty().html('&nbsp;');
+                $('#div_qtype').append(html_data);
             }
             else
             {
