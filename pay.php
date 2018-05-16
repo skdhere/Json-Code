@@ -3,8 +3,8 @@
 $data = array('as', 'df', 'gh');
 
 // Execute the python script with the JSON data
-$result = shell_exec('python /path/to/myScript.py ' . escapeshellarg(json_encode($data)));
-
+$result = exec('python pay.py ' . escapeshellarg(json_encode($data)));
+print_r($result);
 // Decode the result
 $resultData = json_decode($result, true);
 
