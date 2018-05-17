@@ -1,5 +1,10 @@
 <?php
 
+
+$homepage = file_get_contents('./json.txt',true);
+echo $homepage;
+
+
 session_start();
 session_destroy();
 ?>

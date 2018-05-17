@@ -8,7 +8,7 @@ session_destroy();
 
 if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 {
-    $myfile = fopen("json.json", "w") or die("Unable to open file!");
+    $myfile = fopen("json.txt", "w") or die("Unable to open file!");
     $txt = $_POST['arr'];
     fwrite($myfile, $txt);
     fclose($myfile);
@@ -1045,9 +1045,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                 contentType: "application/x-www-form-urlencoded",                     
                 success: function(response) 
                 {
-                    json = JSON.parse(response);
-                    $('#qtype_name').html(json.Qtype_Name);
-                    showQuestion(json);
+                    
                 },
                 error: function (request, status, error) 
                 {},
