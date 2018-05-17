@@ -3,6 +3,19 @@
 session_start();
 session_destroy();
 ?>
+
+<?php
+
+if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
+{
+    $myfile = fopen("json.json", "w") or die("Unable to open file!");
+    $txt = $_POST['arr'];
+    fwrite($myfile, $txt);
+    fclose($myfile);
+     exit();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,7 +81,7 @@ session_destroy();
                         <li class="list-group-item draggable">+</li>
                         <li class="list-group-item draggable">-</li>
                         <li class="list-group-item draggable">%</li>
-                        <li class="list-group-item draggable">`int`</li>
+                        <!-- <li class="list-group-item draggable">`int`</li> -->
                         
                     </ul>
                 </div>
@@ -124,7 +137,7 @@ session_destroy();
                 <hr>
                 <button id="btn_view_qtype" name="btn_view_qtype" class="btn btn-primary btn-block m-1" style="display: none;">View Qtype</button>
                 <button id="btn_new_qtype" name="btn_new_qtype" class="btn btn-primary btn-block m-1" onclick="setObject()">New Qtype</button>
-                <button id="btn_save_qtype" name="btn_save_qtype" class="btn btn-primary btn-block m-1" style="display: none;">Save Qtype</button>
+                <button id="btn_save_qtype" name="btn_save_qtype" class="btn btn-primary btn-block m-1" onclick=" saveFile();">Save Qtype</button>
                 <button id="btn_del_qtype" name="btn_del_qtype" class="btn btn-primary btn-block m-1" onclick="deleteQtype();" style="display: none;">Delete Qtype</button>
                 
                 <input type="hidden" id="hid_newqtypeflag"  name="hid_newqtypeflag" value="0">
@@ -177,6 +190,17 @@ session_destroy();
               }
             });
         });
+
+        // =================================================================
+        // START : Function For Capitalize The First Letter Of A String
+        // =================================================================
+        function jsUcfirst(string) 
+        {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        // =================================================================
+        // END : Function For Capitalize The First Letter Of A String
+        // =================================================================
 
         // =================================================================
         // START : Function For Show and Hide Content 
@@ -462,7 +486,7 @@ session_destroy();
                         if(QTypeName != '')
                         {
                             $('#hid_newqtypeflag').val(1);
-                            $('#div_qtype').html('<div class="col-md-2"><span class="badge badge-info badge-pill">QType: </span></div><div class="col-md-10"><h2 id="qtype_name">'+QTypeName+'</h2></div>');
+                            $('#div_qtype').html('<div class="col-md-2"><span class="badge badge-info badge-pill">QType: </span></div><div class="col-md-10"><h2 id="qtype_name">'+jsUcfirst(QTypeName)+'</h2></div>');
                             
                             ar = {
                                 "QType": 1,
@@ -496,10 +520,8 @@ session_destroy();
                 if(from_where == 'qtype')
                 {
                     $('#div'+btnCount).remove();
-                    console.log(ar);
 
                     var len = (ar.Question_Format.length) - 1;
-                    
                     ar.Question_Format.splice(len,1);
 
                     console.log('#rmBtn'+(btnCount-1));
@@ -1013,7 +1035,32 @@ session_destroy();
             $('#div_step_'+stepCount).append(html);
         }
 
+        function saveFile(passForm) {
+
+                arr = JSON.stringify(ar);
+                $.ajax({
+                url: "index4.php?",
+                type: "POST",
+                data :{'arr':arr,'saveFile':1},
+                contentType: "application/x-www-form-urlencoded",                     
+                success: function(response) 
+                {
+                    json = JSON.parse(response);
+                    $('#qtype_name').html(json.Qtype_Name);
+                    showQuestion(json);
+                },
+                error: function (request, status, error) 
+                {},
+                complete: function()
+                {}
+            });
+            
+         }
+        
+         
         </script>
+
+
     <script type="text/javascript" src="js/ASCII.js"></script>
 </body>
 </html>
