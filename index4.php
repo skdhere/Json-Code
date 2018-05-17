@@ -255,9 +255,9 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                         html += '<table>';
                             html += '<tr>';
                                 html += '<td>';
-                                    html += '<div><input type="" class="form-control" name=""></div>';
+                                    html += '<div><input type="" class="form-control" name="" readonly></div>';
                                     html += '<hr>';
-                                    html += '<div><input type="" class="form-control" name=""></div>';
+                                    html += '<div><input type="" class="form-control" name="" readonly></div>';
                                 html += '</td>';
                             html += '</tr>';
                         html += '</table>';  
@@ -316,12 +316,12 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                         html += '<table>';
                             html += '<tr>';
                                 html += '<td>';
-                                    html += '<div><input type="" class="form-control" name=""></div>';
+                                    html += '<div><input type="" class="form-control" name="" readonly></div>';
                                 html += '</td>';
                                 html += '<td>';
-                                    html += '<div><input type="" class="form-control" name=""></div>';
+                                    html += '<div><input type="" class="form-control" name="" readonly></div>';
                                     html += '<hr>';
-                                    html += '<div><input type="" class="form-control" name=""></div>';
+                                    html += '<div><input type="" class="form-control" name="" readonly></div>';
                                 html += '</td>';
                             html += '</tr>';
                         html += '</table>';  
