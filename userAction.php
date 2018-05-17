@@ -3,8 +3,8 @@
 $json ='{
   "QType": 1,
   "Qtype_Name": "Multiplication of 2 Mixed fraction",
-  "Question": {
-    "Variables": [
+  "Question": [
+    
       {
         "name": "Mixedfraction",
         "Type": "variable", 
@@ -17,15 +17,15 @@ $json ='{
         "Type": "operator"
       },
       {
-        "name": "Mixed fraction",
+        "name": "Mixedfraction",
         "Type": "variable", 
         "N": "",
         "D": "",
         "W": ""
       }
-    ]
+    ],
     
-  },
+  
   "Solution": [
     {
       "Steps": [

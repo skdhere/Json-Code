@@ -496,12 +496,16 @@ session_destroy();
                 if(from_where == 'qtype')
                 {
                     $('#div'+btnCount).remove();
-                    var len = (ar.Question.length) - 1;
-                    ar.Question.splice(len,1);
+                    console.log(ar);
 
+                    var len = (ar.Question_Format.length) - 1;
+                    
+                    ar.Question_Format.splice(len,1);
+
+                    console.log('#rmBtn'+(btnCount-1));
                     $('#rmBtn'+(btnCount-1)).css('display','block');
                     
-                    if(ar.Question.length == 0)
+                    if(ar.Question_Format.length == 0)
                     {
                         hideContent('btn_add_solution');
                     }

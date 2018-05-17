@@ -385,11 +385,11 @@ session_destroy();
 
         function showQuestion(json)
         {
-            var variable = json.Question.Variables;
+            var variable = json.Question;
             var html     = '';
             for(var i = 0;i<variable.length;i++)
             {
-                if(variable[i].name =='Mixed_fraction')
+                if(variable[i].name =='Mixedfraction')
                 {
                     html +='<div class="col-md-1">';
                     html += MixedQuestion();
