@@ -26,32 +26,27 @@ session_destroy();
                     <h6>Building Block List</h6>
                     <ul class="list-group" style="font-size: 12px;">
                         <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_mixed_to_improper" name="bb_mixed_to_improper" title="Converting Mixed To Improper Fraction" onclick="add_building_block('bb_mixed_to_improper', 'Convert Mixed to Improper Fraction', 'convertMixedToImproperFraction');">
+                            <a href="javascript:void(0)" id="bb_mixed_to_improper" name="bb_mixed_to_improper" title="Converting Mixed To Improper Fraction" onclick="add_building_block('bb_mixed_to_improper', 'Convert Mixed to Improper Fraction');">
                                 Converting Mixed To Improper Fraction
                             </a>
                         </li>
                         <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_prime_factors" name="bb_prime_factors" title="Find Prime Factors of Fraction" onclick="add_building_block('bb_prime_factors', 'Find the prime factor of num and denom', 'computeListOfPrimeFactors');">
+                            <a href="javascript:void(0)" id="bb_prime_factors" name="bb_prime_factors" title="Find Prime Factors of Fraction" onclick="add_building_block('bb_prime_factors', 'Find the prime factor of num and denom');">
                                 Find Prime Factors of Fraction
                             </a>
                         </li>
                         <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_concatenation_factors" name="bb_concatenation_factors" title="Concatenation" onclick="add_building_block('bb_concatenation_factors', 'Concatenation', 'Concatenation');">
-                                Concatenation
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_cancel_comm_factors" name="bb_cancel_comm_factors" title="Canceling Common Factors" onclick="add_building_block('bb_cancel_comm_factors', 'Cancel common factors', 'cancelCommonFactors');">
+                            <a href="javascript:void(0)" id="bb_cancel_comm_factors" name="bb_cancel_comm_factors" title="Canceling Common Factors" onclick="add_building_block('bb_cancel_comm_factors', 'Cancel common factors');">
                                 Canceling Common Factors
                             </a>
                         </li>
                         <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_multiply_remaining_factors" name="bb_multiply_remaining_factors" title="Multiply Remaining Factors" onclick="add_building_block('bb_multiply_remaining_factors', 'Multiply factors', 'multiplyFactors');">
+                            <a href="javascript:void(0)" id="bb_multiply_remaining_factors" name="bb_multiply_remaining_factors" title="Multiply Remaining Factors" onclick="add_building_block('bb_multiply_remaining_factors', 'Multiply factors');">
                                 Multiply Remaining Factors
                             </a>
                         </li>
                         <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_improper_to_mixed" name="bb_improper_to_mixed" title="Converting Improper To Mixed Fraction" onclick="add_building_block('bb_improper_to_mixed', 'Convert Improper to Mixed Fraction', 'convertImproperToMixedFraction');">
+                            <a href="javascript:void(0)" id="bb_improper_to_mixed" name="bb_improper_to_mixed" title="Converting Improper To Mixed Fraction" onclick="add_building_block('bb_improper_to_mixed', 'Convert Improper to Mixed Fraction');">
                                 Converting Improper To Mixed Fraction
                             </a>
                         </li>
@@ -78,16 +73,16 @@ session_destroy();
                     <h6>Enum Types</h6>
                     <ul class="list-group ">
                         <li class="list-group-item">
-                            <a href="javascript:void(0)" class="draggable" onclick="Mixed('enum_mixed_fraction', 'hid_enum_mixed_fraction_count');">
+                            <a href="javascript:void(0)" class="draggable" onclick="Mixed('bb_mixed_fraction', 'hid_bb_mixed_fraction_count');">
                                 Mixed Fraction
                             </a>
-                            <input type="hidden" name="hid_enum_mixed_fraction_count" id="hid_enum_mixed_fraction_count" value="0">
+                            <input type="hidden" name="hid_bb_mixed_fraction_count" id="hid_bb_mixed_fraction_count" value="0">
                         </li>
                         <li class="list-group-item">
-                            <a href="javascript:void(0)" class="draggable" onclick="Improper('enum_improper_fraction', 'hid_enum_improper_fraction_count');">
+                            <a href="javascript:void(0)" class="draggable" onclick="Improper('bb_improper_fraction', 'hid_bb_improper_fraction_count');">
                                 Improper Fraction
                             </a>
-                            <input type="hidden" name="hid_enum_improper_fraction_count" id="hid_enum_improper_fraction_count" value="0">
+                            <input type="hidden" name="hid_bb_improper_fraction_count" id="hid_bb_improper_fraction_count" value="0">
                         </li>
                         <li class="list-group-item" onclick="customBlock()">Custom ENUM</li>
                     </ul>
@@ -143,9 +138,9 @@ session_destroy();
 
         ar = {
                 "QType": 1,
-                "Qtype_Name": "Multiplication of 2 Mixed fraction",
-                "Question_Format": [],
-                "Solutions":[],
+                "Qtype Name": "Multiplication of 2 Mixed fraction",
+                "Question": [],
+                "Solution":[],
             }
         isSoltion = 0;
         enumCount = 0;
@@ -205,24 +200,23 @@ session_destroy();
                 $('#'+hid_val).val(txt_hid_val);
                 
                 var hid_newqtypeflag   = $('#hid_newqtypeflag').val();
-                var from_where         = '';
-
+                
                 if(hid_newqtypeflag != 0)
                 {
                     enumCount++;
-                    if(hid_newqtypeflag == 1)
-                    {
+                    // if(hid_newqtypeflag == 1)
+                    // {
                         createJson(param_val);
-                        from_where = 'qtype';
-                    }
-                    else if(hid_newqtypeflag == 2)
-                    {
-                        from_where = 'Solution';
-                    }
+                    //     from_where = 'qtype';
+                    // }
+                    // else if(hid_newqtypeflag == 2)
+                    // {
+                    //     from_where = 'Solution';
+                    // }
                     
                     html += '<div id="div'+enumCount+'" class="col-md-5">';
                         html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';  // , \''+from_where+'\'
                         html += '</div>';
                         html += '<table>';
                             html += '<tr>';
@@ -238,15 +232,15 @@ session_destroy();
                     $('.rmBtn').css('display','none');
                     // enumCount1 = enumCount - 1; 
                     // $('#cancel_div'+enumCount1).empty();
-                    if(hid_newqtypeflag == 1)
-                    {
+                    // if(hid_newqtypeflag == 1)
+                    // {
                         $('#div_qtype').append(html);
-                    }
-                    else if(hid_newqtypeflag == 2)
-                    {
-                       var current_step_count = $('#hid_current_step_count').val();
-                       $('#div_step_'+current_step_count).append(html); 
-                    }
+                    // }
+                    // else if(hid_newqtypeflag == 2)
+                    // {
+                    //    var current_step_count = $('#hid_current_step_count').val();
+                    //    $('#div_step_'+current_step_count).append(html); 
+                    // }
                 }
                 else
                 {
@@ -264,24 +258,15 @@ session_destroy();
                 $('#'+hid_val).val(txt_hid_val);
                 
                 var hid_newqtypeflag   = $('#hid_newqtypeflag').val();
-                var from_where         = '';
 
                 if(hid_newqtypeflag != 0)
                 {
                     enumCount++;
-                    if(hid_newqtypeflag == 1)
-                    {
-                        createJson(param_val);
-                        from_where = 'qtype';
-                    }
-                    else if(hid_newqtypeflag == 2)
-                    {
-                        from_where = 'Solution';
-                    }
-
+                    createJson(param_val);
+                    
                     html += '<div id="div'+enumCount+'" class="col-md-5">';
                         html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                         html += '</div>';
                         html += '<table>';
                             html += '<tr>';
@@ -300,15 +285,7 @@ session_destroy();
                     $('.rmBtn').css('display','none');
                     // enumCount1 = enumCount - 1; 
                     // $('#cancel_div'+enumCount1).empty().html('&nbsp;');
-                    if(hid_newqtypeflag == 1)
-                    {
-                        $('#div_qtype').append(html);
-                    }
-                    else if(hid_newqtypeflag == 2)
-                    {
-                        var current_step_count = $('#hid_current_step_count').val();
-                        $('#div_step_'+current_step_count).append(html); 
-                    }
+                    $('#div_qtype').append(html);
                 }
                 else
                 {
@@ -327,26 +304,17 @@ session_destroy();
                 $('#'+hid_val).val(txt_hid_val);
                 
                 var hid_newqtypeflag   = $('#hid_newqtypeflag').val();
-                var from_where         = '';
 
                 if(hid_newqtypeflag != 0)
                 {
                     enumCount++;
-                    if(hid_newqtypeflag == 1)
-                    {
-                        createJson(param_val);
-                        from_where = 'qtype';
-                    }
-                    else if(hid_newqtypeflag == 2)
-                    {
-                        from_where = 'Solution';
-                    }
-
+                    createJson(param_val);
+                    
                     html_data = '';
 
                     html_data += '<div id="div'+enumCount+'" class="col-md-2" align="center">';
                         html_data += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html_data += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html_data += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                         html_data += '</div>';
                         html_data += '<table>';
                             html_data += '<tr>';
@@ -362,15 +330,7 @@ session_destroy();
                     $('.rmBtn').css('display','none');
                     // enumCount1 = enumCount - 1; 
                     // $('#cancel_div'+enumCount1).empty().html('&nbsp;');
-                    if(hid_newqtypeflag == 1)
-                    {
-                        $('#div_qtype').append(html_data);
-                    }
-                    else if(hid_newqtypeflag == 2)
-                    {
-                        var current_step_count = $('#hid_current_step_count').val();
-                        $('#div_step_'+current_step_count).append(html_data); 
-                    }
+                    $('#div_qtype').append(html_data);
                 }
                 else
                 {
@@ -387,19 +347,19 @@ session_destroy();
             function checkParamType(param_val)
             {
                 // console.log(param_val);
-                if(param_val=='enum_improper_fraction')
+                if(param_val=='bb_improper_fraction')
                 {
                     b = {
-                         "Name": param_val,
+                         "name": param_val,
                          "Type": "variable", 
                          "N"   : "",
                          "D"   : "",
                          "W"   : "1"
                         }
-                }else if(param_val=='enum_mixed_fraction')
+                }else if(param_val=='bb_mixed_fraction')
                 {
                     b = {
-                         "Name": param_val,
+                         "name": param_val,
                          "Type": "variable", 
                          "N"   : "",
                          "D"   : "",
@@ -407,7 +367,7 @@ session_destroy();
                         }
                 }else
                 {
-                    b = {"Name": param_val,
+                    b = {"name": param_val,
                          "Type": "operator"
                      }
                 }
@@ -431,6 +391,7 @@ session_destroy();
                 {
                     showContent('btn_add_solution');
                     showContent('btn_del_qtype');
+                    // showContent('btn_save_qtype');
                     hideContent('btn_new_qtype');
                 }
                 
@@ -484,7 +445,7 @@ session_destroy();
         // =================================================================
         // START : Remove Element From QTypes
         // =================================================================
-            function getRmElement(btnCount, from_where)
+            function getRmElement(btnCount)
             {
                 $('#div'+btnCount).remove();
                 var len = (ar.Question.length) - 1;
@@ -530,10 +491,10 @@ session_destroy();
 
                     $('#hid_newqtypeflag').val(0);
                     $('#hid_cont_add_step_count').val(0);
-                    $('#hid_current_step_count').val(0);
+                    $('#hid_current_step_count').val(1);
                     $('#hid_op_multiply_count').val(0);
-                    $('#hid_enum_improper_fraction_count').val(0);
-                    $('#hid_enum_mixed_fraction_count').val(0);
+                    $('#hid_bb_improper_fraction_count').val(0);
+                    $('#hid_bb_mixed_fraction_count').val(0);
 
                     showContent('btn_new_qtype');
                     hideContent('btn_save_qtype');
@@ -560,12 +521,7 @@ session_destroy();
             {
                 solutionData =  {
                                     "Start":"Initiations",
-                                    "Steps": [
-                                            {
-                                                "BB_Format":[],
-                                                "Display":[]
-                                            }
-                                        ],
+                                    "Steps": [],
                                     "End":"Result"
                                 }
                 return solutionData;
@@ -575,7 +531,7 @@ session_destroy();
             {
                 solutionData = getSolutionArray();
 
-                ar.Solutions.push(solutionData);
+                ar.Solution.push(solutionData);
 
                 // console.log(ar);
                 $('#jasonData').html(ar);
@@ -655,89 +611,7 @@ session_destroy();
         // =================================================================
         // START : Function for adding building-block
         // =================================================================
-            var steps_arr = [];
-
-            function getFormat(param_val, building_block_name, enumCount)
-            {
-                html_data = '';
-                if(param_val == 'bb_mixed_to_improper' || param_val == 'bb_prime_factors' || param_val == 'bb_multiply_remaining_factors' || param_val == 'bb_improper_to_mixed')
-                {
-                    html_data += '<td>';
-                        html_data += '<div class="row">';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' = ';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-7">';
-                                html_data += building_block_name;
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                        html_data += '</div>';
-                    html_data += '</td>';
-                }
-                else if(param_val == 'bb_concatenation_factors')
-                {
-                    html_data += '<td>';
-                        html_data += '<div class="row">';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' = ';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-4">';
-                                html_data += building_block_name;
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' + ';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                        html_data += '</div>';
-                    html_data += '</td>';
-                }
-                else if(param_val == 'bb_cancel_comm_factors')
-                {
-                    html_data += '<td>';
-                        html_data += '<div class="row">';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' = ';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-3">';
-                                html_data += building_block_name;
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" name="">';
-                            html_data += '</div>';
-                        html_data += '</div>';
-                    html_data += '</td>';
-                }
-                return html_data;
-            }
-
-            function createBuildingBlockJson()
-            {
-
-            }
-
-            function add_building_block(param_val, building_block_name, function_name)
+            function add_building_block(param_val, building_block_name)
             {
                 // console.log(param_val+' '+building_block_name);
                 var hid_newqtypeflag = $('#hid_newqtypeflag').val();
@@ -745,34 +619,22 @@ session_destroy();
                 if(hid_newqtypeflag != 0)
                 {
                     enumCount++;
-                    if(hid_newqtypeflag == 2)
-                    {
-                        // Calling Function For Creating JSON for Building Block
-                        createBuildingBlockJson();
-                    }
+                    // Calling Function For Creating JSON
 
                     html = '<div id="div'+enumCount+'" class="col-md-12">';
                         html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', "Solution");" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                         html += '</div>';
-                        html += '<table>';
-                            html += '<tr>';
-                                html += getFormat(param_val, building_block_name, enumCount);
-                            html += '</tr>';
-                        html += '</table>'; 
-                        // html += '<div style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);overflow-y:auto;">';
-                        //     html += building_block_name;
-                        // html += '</div>';
+                        html += '<div style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);overflow-y:auto;">';
+                            html += 
+                            html += building_block_name;
+                        html += '</div>';
                     html += '</div>';
 
                     $('.rmBtn').css('display','none');
-                    // enumCount1 = enumCount - 1; 
-                    // $('#cancel_div'+enumCount1).empty();
-                    if(hid_newqtypeflag == 2)
-                    {
-                       var current_step_count = $('#hid_current_step_count').val();
-                       $('#div_step_'+current_step_count).append(html); 
-                    }
+                    
+                    var current_step_count = $('#hid_current_step_count').val();
+                    $('#div_step_'+current_step_count).append(html); 
                 }
                 else
                 {
