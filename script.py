@@ -1,3 +1,5 @@
+#!C:/Users/punit.RIVERBRIDGE/AppData/Local/Programs/Python/Python37-32/python.exe
+
 """ _____________________________________________ Start of Building Blocks ___________________________________________"""
 
 primeNumbers = 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199
@@ -142,8 +144,7 @@ def displayFractions(v1, v2):
     
     print('                {}                       {}         '.format(v1[0], v2[0]))
     print('          -------------    X       --------------')
-    print('                {}                       {}         '.format(v1[1], v2[1]))    
-    
+    print('                {}                       {}         '.format(v1[1], v2[1]))
 
     return
 
@@ -233,8 +234,10 @@ def simulationLoop():
     print('Please input two mixed fractions to showcase the solution for finding out their product ')
     
  #   v1, v2 = getInputForTwoMixedFractions()
-    v1 = [5,6,2]
-    v2 = [1,3,7] 
+    v1 = [1,3,3]
+    v2 = [1,4,4]
+
+
     
     showSolution(v1, v2)
     
@@ -244,6 +247,7 @@ def simulationLoop():
 simulationLoop()
 
 
+'''
 
 Please input two mixed fractions to showcase the solution for finding out their product 
 Init step
@@ -299,4 +303,4 @@ Step 3: Convert Improper Fraction to Mixed Fraction
 
                 7         
      20    -------------   
-                9  
+                9  '''
