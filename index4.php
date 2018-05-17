@@ -215,16 +215,18 @@ session_destroy();
                     {
                         createJson(param_val);
                         from_where = 'qtype';
+                        key_name = 'Question_Format';
                     }
                     else if(hid_newqtypeflag == 2)
                     {
                         createBuildingBlockDisplayJson(param_val);
                         from_where = 'Solution';
+                        key_name = 'Display';
                     }
                     
                     html += '<div id="div'+enumCount+'" class="col-md-5">';
                         html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\', \''+key_name+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                         html += '</div>';
                         html += '<table>';
                             html += '<tr>';
@@ -274,16 +276,18 @@ session_destroy();
                     {
                         createJson(param_val);
                         from_where = 'qtype';
+                        key_name = 'Question_Format';
                     }
                     else if(hid_newqtypeflag == 2)
                     {
                         createBuildingBlockDisplayJson(param_val);
                         from_where = 'Solution';
+                        key_name = 'Display';
                     }
 
                     html += '<div id="div'+enumCount+'" class="col-md-5">';
                         html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\', \''+key_name+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                         html += '</div>';
                         html += '<table>';
                             html += '<tr>';
@@ -336,18 +340,20 @@ session_destroy();
                     {
                         createJson(param_val);
                         from_where = 'qtype';
+                        key_name = 'Question_Format';
                     }
                     else if(hid_newqtypeflag == 2)
                     {
                         createBuildingBlockDisplayJson(param_val);
                         from_where = 'Solution';
+                        key_name = 'Display';
                     }
 
                     html_data = '';
 
                     html_data += '<div id="div'+enumCount+'" class="col-md-2" align="center">';
                         html_data += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html_data += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html_data += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \''+from_where+'\', \''+key_name+'\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                         html_data += '</div>';
                         html_data += '<table>';
                             html_data += '<tr>';
@@ -485,21 +491,49 @@ session_destroy();
         // =================================================================
         // START : Remove Element From QTypes
         // =================================================================
-            function getRmElement(btnCount, from_where)
+            function getRmElement(btnCount, from_where, key_name)
             {
-                $('#div'+btnCount).remove();
-                var len = (ar.Question.length) - 1;
-                ar.Question.splice(len,1);
-
-                $('#rmBtn'+(btnCount-1)).css('display','block');
-                
-                if(ar.Question.length == 0)
+                if(from_where == 'qtype')
                 {
-                    hideContent('btn_add_solution');
-                }
+                    $('#div'+btnCount).remove();
+                    var len = (ar.Question.length) - 1;
+                    ar.Question.splice(len,1);
 
-                arr = JSON.stringify(ar);
-                $('#jasonData').html(arr);
+                    $('#rmBtn'+(btnCount-1)).css('display','block');
+                    
+                    if(ar.Question.length == 0)
+                    {
+                        hideContent('btn_add_solution');
+                    }
+
+                    arr = JSON.stringify(ar);
+                    $('#jasonData').html(arr);
+                }
+                else
+                {
+                    if(key_name == 'BB_Format')
+                    {
+                        $('#div'+btnCount).remove();
+                        var len = (ar.Solutions[isSoltion-1].Steps[stepCount-1].BB_Format.length) - 1;
+                        ar.Solutions[isSoltion-1].Steps[stepCount-1].BB_Format.splice(len,1);
+                        bbCount--;
+                        $('#rmBtn'+(btnCount-1)).css('display','block');
+                        
+                        arr = JSON.stringify(ar);
+                        $('#jasonData').html(arr);
+                    }
+                    else if(key_name == 'Display')
+                    {
+                        $('#div'+btnCount).remove();
+                        var len = (ar.Solutions[isSoltion-1].Steps[stepCount-1].Display.length) - 1;
+                        ar.Solutions[isSoltion-1].Steps[stepCount-1].Display.splice(len,1);
+
+                        $('#rmBtn'+(btnCount-1)).css('display','block');
+                        
+                        arr = JSON.stringify(ar);
+                        $('#jasonData').html(arr);
+                    }
+                }
             }
         // =================================================================
         // END : Remove Element From QTypes
@@ -594,45 +628,70 @@ session_destroy();
 
             function addSolution()
             {
-                var hid_newqtypeflag = $('#hid_newqtypeflag').val();
-                if(hid_newqtypeflag != 0)
+                var BB_Format_Validation    = 1;
+                var Display_Part_Validation = 1;
+                if(isSoltion > 0)
                 {
-                    // console.log($('#div_qtype').find('div').length);
-                    if( $('#div_qtype').find('div').length > 1)
+                    BB_Format_Validation    = ar.Solutions[isSoltion-1].Steps[stepCount-1].BB_Format.length;
+                    Display_Part_Validation = ar.Solutions[isSoltion-1].Steps[stepCount-1].Display.length; 
+                }
+                
+                if(BB_Format_Validation != 0)
+                {
+                    if(Display_Part_Validation != 0)
                     {
-                        if(hid_newqtypeflag != 2)
+                        var hid_newqtypeflag = $('#hid_newqtypeflag').val();
+                        if(hid_newqtypeflag != 0)
                         {
-                            $('#hid_newqtypeflag').val(2);
+                            // console.log($('#div_qtype').find('div').length);
+                            if( $('#div_qtype').find('div').length > 1)
+                            {
+                                if(hid_newqtypeflag != 2)
+                                {
+                                    $('#hid_newqtypeflag').val(2);
+                                }
+                                isSoltion++;
+                                stepCount = 1;
+                                bbCount   = 0;
+                                html_data = '<div class="col-md-12" style="height:30px;background-color:#116cff;color:#FFF;">';
+                                    html_data += 'Display Solution: '+isSoltion;
+                                html_data += '</div>';
+                                html_data += '<div id="div_init" class="row p-3">';
+                                    html_data += '<div class="col-md-12">';
+                                        html_data += '<span class="badge badge-info badge-pill">Initiations :</span>';
+                                    html_data += '</div>';
+                                html_data += '</div>';
+                                html_data += '<div id="div_step_'+stepCount+'" class="row p-3">';
+                                    html_data += '<div class="col-md-12">';
+                                        html_data += '<span class="badge badge-info badge-pill">Step '+stepCount+':</span>';
+                                    html_data += '</div>';
+                                html_data += '</div>';
+                                
+                                $('.rmBtn').css('display','none');
+                                createSolutionJson();
+                                $('#div_qtype_solution').append(html_data); 
+                            }
+                            else
+                            {
+                                alert('Sorry, Please add Question Type first!');
+                            }
                         }
-                        isSoltion++;
-                        stepCount = 1;
-                        bbCount   = 0;
-                        html_data = '<div class="col-md-12" style="height:30px;background-color:#116cff;color:#FFF;">';
-                            html_data += 'Display Solution: '+isSoltion;
-                        html_data += '</div>';
-                        html_data += '<div id="div_init" class="row p-3">';
-                            html_data += '<div class="col-md-12">';
-                                html_data += '<span class="badge badge-info badge-pill">Initiations :</span>';
-                            html_data += '</div>';
-                        html_data += '</div>';
-                        html_data += '<div id="div_step_'+stepCount+'" class="row p-3">';
-                            html_data += '<div class="col-md-12">';
-                                html_data += '<span class="badge badge-info badge-pill">Step '+stepCount+':</span>';
-                            html_data += '</div>';
-                        html_data += '</div>';
-                        
-                        $('.rmBtn').css('display','none');
-                        createSolutionJson();
-                        $('#div_qtype_solution').append(html_data); 
+                        else
+                        {
+                            alert('Sorry, Please add QType first!');
+                            return false;
+                        }    
                     }
                     else
                     {
-                        alert('Sorry, Please add Question Type first!');
+                        alert('Please, Add Some Display Content in this Step!');
+                        return false;
                     }
                 }
                 else
                 {
-                    alert('Sorry, Please add QType first!');
+                    alert('Please, Add Some Building Block Format in this Step!');
+                    return false;
                 }
             }
         // =================================================================
@@ -642,6 +701,7 @@ session_destroy();
         // =================================================================
         // START : Function For Adding New Step inside the Current Solution
         // =================================================================
+            // Function For JSON Structure For Current Step
             function createCurrentStepArray()
             {
                 CurrentStepData =  {
@@ -651,6 +711,7 @@ session_destroy();
                 return CurrentStepData;
             }
 
+            // Function For creating the JSON for Current Step
             function createCurrentStepJson()
             {
                 CurrentStepData = createCurrentStepArray();
@@ -665,13 +726,32 @@ session_destroy();
 
             function changeCurrentStepCount()
             {
-                stepCount++;
-                bbCount = 0;
-                
-                data = "<hr><div id='div_step_"+stepCount+"' class='row p-3'><div class='col-md-12'><span class='badge badge-info badge-pill'>Step "+stepCount+":</span></div></div>";
-                $('#div_editor_contain').append(data);
+                var BB_Format_Validation    = ar.Solutions[isSoltion-1].Steps[stepCount-1].BB_Format.length;
+                var Display_Part_Validation = ar.Solutions[isSoltion-1].Steps[stepCount-1].Display.length;
 
-                createCurrentStepJson();
+                if(BB_Format_Validation != 0)
+                {
+                    if(Display_Part_Validation != 0)
+                    {
+                        stepCount++;
+                        bbCount = 0;
+                        
+                        data = "<hr><div id='div_step_"+stepCount+"' class='row p-3'><div class='col-md-12'><span class='badge badge-info badge-pill'>Step "+stepCount+":</span></div></div>";
+                        $('#div_editor_contain').append(data);
+
+                        createCurrentStepJson();        
+                    }
+                    else
+                    {
+                        alert('Please, Add Some Display Content in this Step!');
+                        return false;
+                    }
+                }
+                else
+                {
+                    alert('Please, Add Some Building Block Format in this Step!');
+                    return false;
+                }
             }
         // =================================================================
         // END : Function For Adding New Step inside the Current Solution
@@ -856,7 +936,7 @@ session_destroy();
 
                     html = '<div id="div'+enumCount+'" class="col-md-12">';
                         html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', "Solution");" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \'Solution\', \'BB_Format\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                         html += '</div>';
                         html += '<table>';
                             html += '<tr>';
