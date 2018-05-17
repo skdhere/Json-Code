@@ -32,9 +32,9 @@
 	{
 		$html_data = '';
 
-		$html_data .= '<div id="tbl_op_multi_'.$hid_incr_id.'" class="col-md-2" align="center">';
+		$html_data .= '<div id="div'.$hid_incr_id.'" class="col-md-2" align="center">';
             $html_data .= '<div>';
-                $html_data .= '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_op_multi_'.$hid_incr_id.'\', '.$current_step_count.');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                $html_data .= '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_op_multi_'.$hid_incr_id.'\', '.$hid_incr_id.');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
             $html_data .= '</div>';
             $html_data .= '<table>';
                 $html_data .= '<tr>';
@@ -104,7 +104,7 @@
 		$data               = '';
 		$responce_arr       = array();
 
-		$jsonArr  = $obj->jsonArr;
+		
 
 
 

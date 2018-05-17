@@ -34,7 +34,7 @@ session_destroy();
                     <h6>Operators</h6>
                     <ul class="list-group">
                         <li class="list-group-item draggable">
-                            <a href="javascript:void(0)" onclick="getAppendData('op_multiply', 'hid_op_multiply_count');">X</a>
+                            <a href="javascript:void(0)" onclick="Multiply('op_multiply', 'hid_op_multiply_count');">X</a>
                             <input type="hidden" name="hid_op_multiply_count" id="hid_op_multiply_count" value="0">
                         </li>
                         <li class="list-group-item draggable">/</li>
@@ -80,6 +80,7 @@ session_destroy();
                     </div>
                 </div>
             </div>
+             <div id="jasonData"></div>
         </div>
         <div class="col-md-2">
             <div class="col-md-12" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px">
@@ -93,22 +94,31 @@ session_destroy();
                 <button class="btn btn-primary btn-block m-1">Add Solutions</button>
                 <hr>
                 <button class="btn btn-primary btn-block m-1">View Qtype</button>
-                <button class="btn btn-primary btn-block m-1">New Qtype</button>
+                <button class="btn btn-primary btn-block m-1" onclick="setObject()">New Qtype</button>
+                <input type="hidden" id="hid_newqtypeflag"  name="hid_newqtypeflag" value="0">
                 <button class="btn btn-primary btn-block m-1">Save Qtype</button>
                 <button class="btn btn-primary btn-block m-1">Delete Qtype</button>
             </div>
         </div>
     </div>
+    
 </div>
     <script src="js/jquery.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
-        var jsonArr = [];
+        JsonArr = {
+              "QType": 1,
+              "Qtype Name": "Multiplication of 2 Mixed fraction",
+              "Question": [],
+              "Solution":[],
+            }
+        isSoltion = false;
+        enumCount = 0;
 
-         $( function() {
+        $( function() {
 
             $('.draggable').draggable({
               revert: "invalid",
@@ -133,134 +143,104 @@ session_destroy();
               }
             });
 
-         });
+        });
+
         
-        var jsonArr  = [];
-        var mainArr  = [];
-        current_step = 1;
-        ar           = {}
-        function createJson(current_step_count,param_val,txt_hid_val)
+        
+       //set blank when adding new question type
+
+        function setObject()
         {
-            if(current_step_count !=current_step)
-            {  
-                // ar = [];
-                // mainArr['step'+current_step] =[];
-                // mainArr['step'+current_step].push(jsonArr);
-                // current_step  = current_step_count;
-                // console.log(mainArr);
-                // ar[param_val]  = [];
-                // jsonArr =[];
-            }
+            JsonArr = {}; //set blank when adding new question type
+            $('#jasonData').html('');
+            enumCount = 0;
+            // initialization type object 
 
-            var  ar       = [];
-
-            ar[param_val] = [{"name":txt_hid_val}];
-
-            jsonArr.push(ar);
-            console.log(jsonArr);
-        }
-
-        function getAppendData(param_val, hid_val)
-        {
-            
-            var txt_hid_val = parseInt($('#'+hid_val).val());
-            txt_hid_val     = parseInt(txt_hid_val) + 1;
-            $('#'+hid_val).val(txt_hid_val);
-            var current_step_count = $('#hid_current_step_count').val();
-
-            // if(current_step_count !=current_step)
-            // { 
-            //     current_step = current_step_count;
-            // }
-            
-
-            var sendInfo = {"param_val":param_val, "txt_hid_val":txt_hid_val, "current_step_count":current_step_count, "getHtml":1,"jsonArr":jsonArr};
-
-            var get_HTML = JSON.stringify(sendInfo);
-            $.ajax({
-                url: "load_index.php?",
-                type: "POST",
-                data: get_HTML,
-                contentType: "application/json; charset=utf-8",                     
-                success: function(response) 
-                {
-                    data = JSON.parse(response);
-                    createJson(current_step_count,param_val,txt_hid_val) ;
-
-                    if(data.Success == "Success") 
-                    {
-                        $('#div_step_'+current_step_count).append(data.resp);
-                    } 
-                    else
-                    {                   
-                        $('#div_editor_contain').append('');
-                    }
-                },
-                error: function (request, status, error) 
-                {},
-                complete: function()
-                {}
-            });
-        }
-
-        function getRmElement(element_id, current_step_count)
-        {
-            $('#'+element_id).remove();
-            if ($('#div_step_'+current_step_count).find('div').length == 1)
+            var hid_newqtypeflag = $('#hid_newqtypeflag').val();
+            if(hid_newqtypeflag == 0)
             {
-                $('#div_step_'+current_step_count).remove();
+                $('#hid_newqtypeflag').val(1);
+                var QTypeName = prompt("Please Enter QType Name:");
+                $('#qtype_name').html(QTypeName);
+                
+                JsonArr = {
+                  "QType": 1,
+                  "Qtype_Name": "Multiplication of 2 Mixed fraction",
+                  "Question": [],
+                  "Solution":[],
+                }    
+                JsonArr.Qtype_Name = QTypeName;
+                console.log(JsonArr);
             }
+            else
+            {
+                alert("Sorry, You have already added one QType!");                
+            }
+        }
+        
+        function checkParamType(param_val){
+
+            console.log(param_val);
+            if(param_val=='bb_improper_fraction')
+            {
+                b = {
+                     "name": param_val,
+                     "Type": "variable", 
+                     "N"   : "",
+                     "D"   : "",
+                     "W"   : "1"
+                    }
+
+            }else if(param_val=='bb_mixed_fraction')
+            {
+                b = {
+                     "name": param_val,
+                     "Type": "variable", 
+                     "N"   : "",
+                     "D"   : "",
+                     "W"   : ""
+                    }
+            }else
+            {
+                b = {"name": param_val,
+                     "Type": "operator"
+                 }
+            }
+
+            return b;
+        }
+
+        function createJson(param_val)
+        {
+            b = checkParamType(param_val);
+            
+            JsonArr.Question.push(b);
+            
+            console.log(JsonArr);
+            $('#jasonData').html(JsonArr);
+            arr = JSON.stringify(JsonArr);
+            $('#jasonData').html(arr);
+            console.log(arr);
+        }
+
+        
+
+        function getRmElement(element_id, btnCount)
+        {
+            $('#div'+btnCount).remove();
+
+            var len = (JsonArr.Question.length) - 1;
+
+            JsonArr.Question.splice(len,1);
+
+            $('#rmBtn'+(btnCount-1)).css('display','block');
+
+            arr = JSON.stringify(JsonArr);
+            $('#jasonData').html(arr);
         }
         
         function changeCurrentStepCount()
         {
-            ar = [];
-            ar5 =[];
-            var current_step_count = parseInt($('#hid_current_step_count').val());
-            // mainArr['step'+current_step_count] = [];
-            ar5['step'+current_step_count]     =  [jsonArr];
-
-            mainArr.push(ar5);
-            console.log(mainArr);
-            current_step  = current_step_count + 1;
-            
-            jsonArr = [];
-            
-            var demo = [];
-            for(var i = 0; i<mainArr.length;i++)
-            {
-                console.log(mainArr[i]);
-                // console.log(mainArr[i][0]);
-                var n ='step'+ (i+1);
-                console.log(n);
-                console.log(JSON.stringify(mainArr[i]))
-                console.log(mainArr[i].step1);
-                console.log(mainArr[i].n);
-                console.log('===============');
-
-                var products           =   {"productData":mainArr[i].step1};
-                console.log(products);
-                    console.log(JSON.stringify(products));
-            }
-
-            $.ajax({
-                url: "load_index.php?",
-                type: "POST",
-                data: {'pst':demo,'test':1},
-                contentType: "application/x-www-form-urlencoded",                     
-                success: function(response) 
-                {
-
-                    data = JSON.parse(response);
-                    console.log(data);
-                },
-                error: function (request, status, error) 
-                {},
-                complete: function()
-                {}
-            });
-            
-           
             new_step_count         = parseInt(current_step_count) + 1;
             $('#hid_current_step_count').val(new_step_count);
             
@@ -275,39 +255,13 @@ session_destroy();
             var txt_hid_val        = parseInt($('#'+hid_val).val());
             txt_hid_val            = parseInt(txt_hid_val) + 1;
             $('#'+hid_val).val(txt_hid_val);
-
-            if ($('#div_step_'+current_step_count).find('div').length == 0)
-            {
-               current_step_count = current_step_count - 1;
-               $('#hid_current_step_count').val(current_step_count);
-               $('#'+hid_val).val(0);
-               alert("please add the step first!");
-               return false;
-            }
             
-
-            var sendInfo = {"param_val":param_val, "txt_hid_val":txt_hid_val, "current_step_count":current_step_count, "getHtml":1,"jsonArr":jsonArr};
-            var get_HTML = JSON.stringify(sendInfo);
-            $.ajax({
-                url: "load_index.php?",
-                type: "POST",
-                data: get_HTML,
-                contentType: "application/json; charset=utf-8",                     
-                success: function(response) 
-                {
-                    data = JSON.parse(response);
-                    
-                },
-                error: function (request, status, error) 
-                {},
-                complete: function()
-                {}
-            });
+            enumCount++;
             createJson(current_step_count,param_val,txt_hid_val);
             
-            html += '<div id="tbl_bb_improper_frac_'+txt_hid_val+'" class="col-md-5">';
+            html += '<div id="div'+enumCount+'" class="col-md-5">';
                 html += '<div>';
-                    html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_improper_frac_'+txt_hid_val+'\', '+current_step_count+');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                    html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_improper_frac_'+txt_hid_val+'\', '+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                 html += '</div>';
                 html += '<table>';
                     html += '<tr>';
@@ -320,6 +274,7 @@ session_destroy();
                 html += '</table>';  
             html += '</div>';
 
+            $('.rmBtn').css('display','none');
             $('#div_step_'+current_step_count).append(html);
         }
 
@@ -330,38 +285,12 @@ session_destroy();
             var txt_hid_val        = parseInt($('#'+hid_val).val());
             txt_hid_val            = parseInt(txt_hid_val) + 1;
             $('#'+hid_val).val(txt_hid_val);
-
-            if ($('#div_step_'+current_step_count).find('div').length == 0)
-            {
-               current_step_count = current_step_count - 1;
-               $('#hid_current_step_count').val(current_step_count);
-               $('#'+hid_val).val(0);
-               alert("please add the step first!");
-               return false;
-            }
-
-            var sendInfo = {"param_val":param_val, "txt_hid_val":txt_hid_val, "current_step_count":current_step_count, "getHtml":1,"jsonArr":jsonArr};
-
-            var get_HTML = JSON.stringify(sendInfo);
-            $.ajax({
-                url: "load_index.php?",
-                type: "POST",
-                data: get_HTML,
-                contentType: "application/json; charset=utf-8",                     
-                success: function(response) 
-                {
-                    data = JSON.parse(response);
-                },
-                error: function (request, status, error) 
-                {},
-                complete: function()
-                {}
-            });      
-
-            createJson(current_step_count,param_val,txt_hid_val);
-            html += '<div id="tbl_bb_frac_'+txt_hid_val+'" class="col-md-5">';
+            
+            enumCount++;
+            createJson(param_val);
+            html += '<div id="div'+enumCount+'" class="col-md-5">';
                 html += '<div>';
-                    html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_frac_'+txt_hid_val+'\', '+current_step_count+');"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                    html += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_bb_frac_'+txt_hid_val+'\', '+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                 html += '</div>';
                 html += '<table>';
                     html += '<tr>';
@@ -377,8 +306,43 @@ session_destroy();
                 html += '</table>';  
             html += '</div>';
 
+            $('.rmBtn').css('display','none');
             $('#div_step_'+current_step_count).append(html);
         }
+
+        function Multiply(param_val, hid_val)
+        {       
+            var current_step_count = parseInt($('#hid_current_step_count').val());
+            var html               = '';
+            var txt_hid_val        = parseInt($('#'+hid_val).val());
+            txt_hid_val            = parseInt(txt_hid_val) + 1;
+            $('#'+hid_val).val(txt_hid_val);
+            
+            enumCount++;
+            createJson(current_step_count,param_val,txt_hid_val);
+
+            html_data = '';
+
+            html_data += '<div id="div'+enumCount+'" class="col-md-2" align="center">';
+                html_data += '<div>';
+                    html_data += '<a href="javascript:void(0)" onclick="getRmElement(\'tbl_op_multi_'+txt_hid_val+'\', '+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                html_data += '</div>';
+                html_data += '<table>';
+                    html_data += '<tr>';
+                        html_data += '<td>';
+                            html_data += '<div>&nbsp;</div>';
+                            html_data += '<h3>X</h3>';
+                            html_data += '<div>&nbsp;</div>';
+                        html_data += '</td>';
+                    html_data += '</tr>';
+                html_data += '</table>';  
+            html_data += '</div>';
+
+            $('.rmBtn').css('display','none');
+            $('#div_step_'+current_step_count).append(html_data);
+        }
+
+        
 
         function customBlock()
         {
