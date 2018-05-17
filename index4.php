@@ -8,7 +8,7 @@ session_destroy();
 
 if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 {
-    $myfile = fopen("json.txt", "w") or die("Unable to open file!");
+    $myfile = fopen($_POST['name'].".txt", "w") or die("Unable to open file!");
     $txt = $_POST['arr'];
     fwrite($myfile, $txt);
     fclose($myfile);
@@ -1041,11 +1041,11 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                 $.ajax({
                 url: "index4.php?",
                 type: "POST",
-                data :{'arr':arr,'saveFile':1},
+                data :{'arr':arr,'saveFile':1,'name':ar.Qtype_Name},
                 contentType: "application/x-www-form-urlencoded",                     
                 success: function(response) 
                 {
-                    
+                    alert('Your file is saved!');
                 },
                 error: function (request, status, error) 
                 {},
