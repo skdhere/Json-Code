@@ -68,7 +68,7 @@ session_destroy();
                         <li class="list-group-item draggable">+</li>
                         <li class="list-group-item draggable">-</li>
                         <li class="list-group-item draggable">%</li>
-                        <li class="list-group-item draggable">`int`</li>
+                        <!-- <li class="list-group-item draggable">`int`</li> -->
                         
                     </ul>
                 </div>
@@ -177,6 +177,17 @@ session_destroy();
               }
             });
         });
+
+        // =================================================================
+        // START : Function For Capitalize The First Letter Of A String
+        // =================================================================
+        function jsUcfirst(string) 
+        {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+        // =================================================================
+        // END : Function For Capitalize The First Letter Of A String
+        // =================================================================
 
         // =================================================================
         // START : Function For Show and Hide Content 
@@ -462,7 +473,7 @@ session_destroy();
                         if(QTypeName != '')
                         {
                             $('#hid_newqtypeflag').val(1);
-                            $('#div_qtype').html('<div class="col-md-2"><span class="badge badge-info badge-pill">QType: </span></div><div class="col-md-10"><h2 id="qtype_name">'+QTypeName+'</h2></div>');
+                            $('#div_qtype').html('<div class="col-md-2"><span class="badge badge-info badge-pill">QType: </span></div><div class="col-md-10"><h2 id="qtype_name">'+jsUcfirst(QTypeName)+'</h2></div>');
                             
                             ar = {
                                 "QType": 1,
@@ -496,12 +507,12 @@ session_destroy();
                 if(from_where == 'qtype')
                 {
                     $('#div'+btnCount).remove();
-                    var len = (ar.Question.length) - 1;
-                    ar.Question.splice(len,1);
+                    var len = (ar.Question_Format.length) - 1;
+                    ar.Question_Format.splice(len,1);
 
                     $('#rmBtn'+(btnCount-1)).css('display','block');
                     
-                    if(ar.Question.length == 0)
+                    if(ar.Question_Format.length == 0)
                     {
                         hideContent('btn_add_solution');
                     }
