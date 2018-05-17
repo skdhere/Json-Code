@@ -1,5 +1,9 @@
-#!C:/Users/punit.RIVERBRIDGE/AppData/Local/Programs/Python/Python37-32/python.exe
+#!C:/Python27/python.exe
+import json
+import requests
 print("Content-type:text/html\r\n\r\n")
+
+# Hier comes you received data
 
 primeNumbers = 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199
 
@@ -93,33 +97,41 @@ def multiplyFactors(cpf):
 
 v1 = [1,4,3] #num den whole
 v2 = [4,9,4] #num den whole
+
+print "v1 = ",v1,"<br>"
+print "v2 = ",v2,"<br>"
+
 tv1 = convertMixedToImproperFraction(v1)
 tv2 = convertMixedToImproperFraction(v2)
+
 tv1NUMfactors = computeListOfPrimeFactors(tv1[0])
 tv1DEMfactors = computeListOfPrimeFactors(tv1[1])
 tv2NUMfactors = computeListOfPrimeFactors(tv2[0])
 tv2DEMfactors = computeListOfPrimeFactors(tv2[1])
 
-print("v1 = ",v1,"<br>")
-print("v2 = ",v2,"<br>")
+
 # print("%s",finaldata)
-print("Convert mixed to Improper for Variable 1 = ",tv1[0:2],"<br>")
-print("Convert mixed to Improper for Variable 2 = ",tv2[0:2],"<br>")
-print("Prime Factor for numerator for Variable 1 = ",tv1NUMfactors,"<br>")
-print("Prime Factor for denominator for Variable 1 = ",tv1DEMfactors,"<br>")
-print("Prime Factor for numerator for Variable 2 = ",tv2NUMfactors,"<br>")
-print("Prime Factor for denominator for Variable 2 = ",tv2DEMfactors,"<br>")
+
+print "Convert mixed to Improper for Variable 1 = ",tv1[0:2],"<br>"
+print "Convert mixed to Improper for Variable 2 = ",tv2[0:2],"<br>"
+print "Prime Factor for numerator for Variable 1 = ",tv1NUMfactors,"<br>"
+print "Prime Factor for denominator for Variable 1 = ",tv1DEMfactors,"<br>"
+print "Prime Factor for numerator for Variable 2 = ",tv2NUMfactors,"<br>"
+print "Prime Factor for denominator for Variable 2 = ",tv2DEMfactors,"<br>"
 conNUMfactors = tv1NUMfactors + tv2NUMfactors
 conDEMfactors = tv1DEMfactors + tv2DEMfactors
-print("Concatenation of numerators (v1 & v2) = ",conNUMfactors,"<br>")
-print("Concatenation of denominator (v1 & v2) = ",conDEMfactors,"<br>")
+print "Concatenation of numerators (v1 & v2) = ",conNUMfactors,"<br>"
+print "Concatenation of denominator (v1 & v2) = ",conDEMfactors,"<br>"
 finalNUMfactors, finalDEMfactors = cancelCommonFactors(conNUMfactors, conDEMfactors)
-print("Cancel common factors of numerators (v1 & v2) = ",finalNUMfactors,"<br>")
-print("Cancel common factors of denominator (v1 & v2) = ",finalDEMfactors,"<br>")
+print "Cancel common factors of numerators (v1 & v2) = ",finalNUMfactors,"<br>"
+print "Cancel common factors of denominator (v1 & v2) = ",finalDEMfactors,"<br>"
+finalNUM =  multiplyFactors( finalNUMfactors)
+finalDEM =  multiplyFactors( finalDEMfactors)
+print "Multiply factors of numerators (v1 & v2) = ",finalNUM,"<br>"
+print "Multiply factors of denominator (v1 & v2) = ",finalDEM,"<br>"
 res = [0,1,1]
-res[0] =  multiplyFactors( finalNUMfactors)
-res[1] =  multiplyFactors( finalDEMfactors)
-print("Multiply factors of numerators (v1 & v2) = ",finalNUM,"<br>")
-print("Multiply factors of denominator (v1 & v2) = ",finalDEM,"<br>")
+res[0] = finalNUM
+res[1] = finalDEM
 result = convertImproperToMixedFraction(res)
-print("Final result = ", result)
+
+print "Final result = ", result
