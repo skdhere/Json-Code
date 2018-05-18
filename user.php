@@ -27,6 +27,24 @@
         {
             $n = $d;
             $d = $n;
+            if($n == $d)
+            {
+                if($n == 9)
+                {
+                    $d = $d - 1;
+                }
+                else
+                {
+                    $n = $n + 1;
+                }
+            }
+        }
+        else
+        {
+            if($n == $d)
+            {
+                $n = $n + 1;
+            }
         }
 
         $html_data = '';
@@ -98,8 +116,8 @@
             <div id="div_editor_contain" class="col-md-12 droppable">
                 <div class="row p-3">
                 <?php
-                foreach ($json_arr['Question_Format'] as $question) {
-                    
+                foreach ($json_arr['Question_Format'] as $question) 
+                {
                     if($question['Name']=='enum_mixed_fraction')
                     {
                         echo getMixedFraction();
@@ -117,7 +135,6 @@
         <div class="col-md-2">
             &nbsp;
         </div>
-        
     </div>
 </div>
 
