@@ -1,8 +1,25 @@
 <?php
 
 
-$homepage = file_get_contents('./json.txt',true);
-echo $homepage;
+$json_data = file_get_contents('abc.json');
+$json_arr  = json_decode($json_data,true);
+
+echo $json_arr['Qtype_Name'];
+
+echo count($json_arr['Solutions'][0]['Steps']);
+
+$func_arr  = array();
+foreach($json_arr['Solutions'][0]['Steps'] as $steps)
+{
+    foreach($steps['BB_Format'] as $step_format)
+    {
+        array_push($func_arr,$step_format['Format'][0]['BB_Function']);
+    }
+}
+
+var_dump($func_arr);
+
+
 
 
 session_start();
@@ -11,7 +28,7 @@ session_destroy();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title><?php echo ucfirst($json_arr['Qtype_Name']); ?></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -20,12 +37,17 @@ session_destroy();
 <body>
 
 <div class="jumbotron text-center">
-    <h1 id="qtype_name"></h1>
+    <h1 id="qtype_name"><?php echo ucfirst($json_arr['Qtype_Name']); ?></h1>
 </div>
 
 <div id="question" class="row">
-
+    <?php
+    foreach ($json_arr['Question_Format'] as $question) {
+        var_dump($question);
+    }
+    ?>
 </div>
+
 <br>
 
 
@@ -386,7 +408,7 @@ session_destroy();
             });
         }
        
-        loadQuestion();
+        // loadQuestion();
 
         function showQuestion(json)
         {

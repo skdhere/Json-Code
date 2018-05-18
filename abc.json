@@ -1,0 +1,430 @@
+{
+  "QType": 1,
+  "Qtype_Name": "Multiplication of 2 Mixed fraction",
+  "Question_Format": [
+      {
+        "Name": "enum_mixed_fraction",
+        "Type": "variable", 
+        "N": "",
+        "D": "",
+        "W": ""
+      },
+      {
+        "Name": "op_multiply",
+        "Type": "operator"
+      },
+      {
+        "Name": "enum_mixed_fraction",
+        "Type": "variable", 
+        "N": "",
+        "D": "",
+        "W": ""
+      }
+    ],
+  "Solutions": [
+    {
+      "Start":"init",
+      "Steps": [
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Convert Mixed to Improper",
+                "Format": [
+                  {
+                    "BB_Function":"convertMixedToImproperFraction",
+                    "Input":"v1",
+                    "Output":"tv1"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Convert Mixed to Improper",
+                "Format": [
+                  {
+                    "BB_Function":"convertMixedToImproperFraction",
+                    "Input":"v1",
+                    "Output":"tv1"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              },
+              {
+                "Name":"op_multiply",
+                "type":"operator"
+              },
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Find Prime Factors of Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"computeListOfPrimeFactors",
+                    "Input":"tv1n1",
+                    "Output":"fn1"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Find Prime Factors of Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"computeListOfPrimeFactors",
+                    "Input":"tv1d1",
+                    "Output":"fd1"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Find Prime Factors of Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"computeListOfPrimeFactors",
+                    "Input":"tv2n2",
+                    "Output":"fn2"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Find Prime Factors of Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"computeListOfPrimeFactors",
+                    "Input":"tv2d2",
+                    "Output":"fd2"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              },
+              {
+                "Name":"op_multiply",
+                "type":"operator"
+              },
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Concatenation",
+                "Format": [
+                  {
+                    "BB_Function":"Concatenation",
+                    "Input":"fn1,fn2",
+                    "Output":"FConNumFactors"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Concatenation",
+                "Format": [
+                  {
+                    "BB_Function":"Concatenation",
+                    "Input":"fd1,fd2",
+                    "Output":"FConDenumFactors"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Canceling Common Factors",
+                "Format": [
+                  {
+                    "BB_Function":"cancelCommonFactors",
+                    "Input":"FConNumFactors,FConDenumFactors",
+                    "Output":"FNumFactors,FDenumFactors"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Multiply Remaining Factors",
+                "Format": [
+                  {
+                    "BB_Function":"multiplyFactors",
+                    "Input":"FNumFactors",
+                    "Output":"FNum"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Multiply Remaining Factors",
+                "Format": [
+                  {
+                    "BB_Function":"multiplyFactors",
+                    "Input":"FDenumFactors",
+                    "Output":"FDenum"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Converting Improper To Mixed Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"convertImproperToMixedFraction",
+                    "Input":"x",
+                    "Output":"FResult"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_mixed_fraction", 
+                "Type": "variable"
+              }
+            ]
+        }
+      ],
+      "End":"result"
+    },
+    {
+      "Start":"init",
+      "Steps": [
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Convert Mixed to Improper",
+                "Format": [
+                  {
+                    "BB_Function":"convertMixedToImproperFraction",
+                    "Input":"v1",
+                    "Output":"tv1"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Convert Mixed to Improper",
+                "Format": [
+                  {
+                    "BB_Function":"convertMixedToImproperFraction",
+                    "Input":"v1",
+                    "Output":"tv1"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              },
+              {
+                "Name":"op_multiply",
+                "type":"operator"
+              },
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Find Prime Factors of Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"computeListOfPrimeFactors",
+                    "Input":"tv1n1",
+                    "Output":"fn1"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Find Prime Factors of Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"computeListOfPrimeFactors",
+                    "Input":"tv1d1",
+                    "Output":"fd1"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Find Prime Factors of Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"computeListOfPrimeFactors",
+                    "Input":"tv2n2",
+                    "Output":"fn2"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Find Prime Factors of Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"computeListOfPrimeFactors",
+                    "Input":"tv2d2",
+                    "Output":"fd2"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              },
+              {
+                "Name":"op_multiply",
+                "type":"operator"
+              },
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Concatenation",
+                "Format": [
+                  {
+                    "BB_Function":"Concatenation",
+                    "Input":"fn1,fn2",
+                    "Output":"FConNumFactors"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Concatenation",
+                "Format": [
+                  {
+                    "BB_Function":"Concatenation",
+                    "Input":"fd1,fd2",
+                    "Output":"FConDenumFactors"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Canceling Common Factors",
+                "Format": [
+                  {
+                    "BB_Function":"cancelCommonFactors",
+                    "Input":"FConNumFactors,FConDenumFactors",
+                    "Output":"FNumFactors,FDenumFactors"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Multiply Remaining Factors",
+                "Format": [
+                  {
+                    "BB_Function":"multiplyFactors",
+                    "Input":"FNumFactors",
+                    "Output":"FNum"
+                  }
+                ]
+              },
+              {
+                "BB_Name": "Multiply Remaining Factors",
+                "Format": [
+                  {
+                    "BB_Function":"multiplyFactors",
+                    "Input":"FDenumFactors",
+                    "Output":"FDenum"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_improper_fraction", 
+                "Type": "variable"
+              }
+            ]
+        },
+        {
+          "BB_Format":[
+              {
+                "BB_Name": "Converting Improper To Mixed Fraction",
+                "Format": [
+                  {
+                    "BB_Function":"convertImproperToMixedFraction",
+                    "Input":"x",
+                    "Output":"FResult"
+                  }
+                ]
+              }
+            ],
+          "Display":[
+              {
+                "Name": "enum_mixed_fraction", 
+                "Type": "variable"
+              }
+            ]
+        }
+      ],
+      "End":"Result"
+    }
+  ]
+}
