@@ -425,7 +425,6 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                          "Type": "variable", 
                          "N"   : "",
                          "D"   : "",
-                         "W"   : "1"
                         }
                 }else if(param_val=='enum_mixed_fraction')
                 {
