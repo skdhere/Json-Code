@@ -1,30 +1,78 @@
 <?php
+    $json_data = file_get_contents('abc.json');
+    $json_arr  = json_decode($json_data,true);
 
+    echo $json_arr['Qtype_Name'];
 
+    echo count($json_arr['Solutions'][0]['Steps']);
 
-$json_data = file_get_contents('abc.json');
-$json_arr  = json_decode($json_data,true);
-
-echo $json_arr['Qtype_Name'];
-
-echo count($json_arr['Solutions'][0]['Steps']);
-
-$func_arr  = array();
-foreach($json_arr['Solutions'][0]['Steps'] as $steps)
-{
-    foreach($steps['BB_Format'] as $step_format)
+    $func_arr  = array();
+    foreach($json_arr['Solutions'][0]['Steps'] as $steps)
     {
-        array_push($func_arr,$step_format['Format'][0]['BB_Function']);
+        foreach($steps['BB_Format'] as $step_format)
+        {
+            array_push($func_arr,$step_format['Format'][0]['BB_Function']);
+        }
     }
-}
 
-var_dump($func_arr);
+    var_dump($func_arr);
 
+    function getMixedFraction()
+    {
+        $w = rand(1,20);
+        $n = rand(1,9);
+        $d = rand(1,9);
 
+        if($n < $d)
+        {
+            $n = $d;
+            $d = $n;
+        }
 
+        $html_data = '';
 
-session_start();
-session_destroy();
+        $html_data .= '<div class="col-md-5">';
+            $html_data .= '<table>';
+                $html_data .= '<tr>';
+                    $html_data .= '<td>';
+                        $html_data .= '<div><input type="" class="form-control" name="" value="'.$w.'" readonly></div>';
+                    $html_data .= '</td>';
+                    $html_data .= '<td>';
+                        $html_data .= '<div><input type="" class="form-control" name="" value="'.$n.'" readonly></div>';
+                        $html_data .= '<hr>';
+                        $html_data .= '<div><input type="" class="form-control" name="" value="'.$d.'" readonly></div>';
+                    $html_data .= '</td>';
+                $html_data .= '</tr>';
+            $html_data .= '</table>';  
+        $html_data .= '</div>';
+
+        return $html_data;
+    }
+
+    function getOperator($op_val)
+    {
+        $html_data = '';    
+
+        $html_data .= '<div class="col-md-2" align="center">';
+            $html_data .= '<table>';
+                $html_data .= '<tr>';
+                    $html_data .= '<td>';
+                        $html_data .= '<div>&nbsp;</div>';
+                        if($op_val == 'op_multiply')
+                        {
+                            $html_data .= '<h3>X</h3>';
+                        }
+                        $html_data .= '<div>&nbsp;</div>';
+                    $html_data .= '</td>';
+                $html_data .= '</tr>';
+            $html_data .= '</table>';  
+        $html_data .= '</div>';
+
+        return $html_data;
+    }
+
+    session_start();
+    session_destroy();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,24 +82,6 @@ session_destroy();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
-    <?php
-function getMixedFraction()
-{
-    $w = rand(1,20);
-    $n = rand(1,9);
-    $d = rand(1,9);
-
-    if($n < $d)
-    {
-        $n = $d;
-        $d = $n;
-    }
-
-    echo '&nbsp;&nbsp;========'.$w.'<br>';
-    echo '&nbsp;&nbsp;========'.$n.'<br>';
-    echo '&nbsp;&nbsp;========'.$d.'<br>';
-}
-    ?>
 </head>
 <body>
 
@@ -59,21 +89,39 @@ function getMixedFraction()
     <h1 id="qtype_name"><?php echo ucfirst($json_arr['Qtype_Name']); ?></h1>
 </div>
 
-<div id="question" class="row">
-    <?php
-    foreach ($json_arr['Question_Format'] as $question) {
+<div class="container-fluid">
+    <div id="question" class="row">
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+        <div class="col-md-8">
+            <div id="div_editor_contain" class="col-md-12 droppable">
+                <div class="row p-3">
+                <?php
+                foreach ($json_arr['Question_Format'] as $question) {
+                    
+                    if($question['Name']=='enum_mixed_fraction')
+                    {
+                        echo getMixedFraction();
+                    }
+
+                    if($question['Name'] == 'op_multiply')
+                    {
+                        echo getOperator('op_multiply');
+                    }
+                }
+                ?>
+                </div>
+            </div>    
+        </div>
+        <div class="col-md-2">
+            &nbsp;
+        </div>
         
-        if($question['Name']=='enum_mixed_fraction')
-        {
-            echo getMixedFraction();
-        }
-    }
-    ?>
+    </div>
 </div>
 
 <br>
-
-
   
 <div class="container-fluid">
     <div class="row">

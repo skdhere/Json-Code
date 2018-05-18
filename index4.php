@@ -27,126 +27,126 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 </head>
 <body>
 
-<div class="jumbotron text-center">
-    <h1>Editor For Question and Solution Type</h1>
-</div>
-  
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="row">
-                <div class="col-md-6 text-center pb-3">
-                    <h6>Building Block List</h6>
-                    <ul class="list-group" style="font-size: 12px;">
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_mixed_to_improper" name="bb_mixed_to_improper" title="Converting Mixed To Improper Fraction" onclick="add_building_block('bb_mixed_to_improper', 'Convert Mixed to Improper Fraction', 'convertMixedToImproperFraction');">
-                                Converting Mixed To Improper Fraction
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_prime_factors" name="bb_prime_factors" title="Find Prime Factors of Fraction" onclick="add_building_block('bb_prime_factors', 'Find the prime factor of num and denom', 'computeListOfPrimeFactors');">
-                                Find Prime Factors of Fraction
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_concatenation_factors" name="bb_concatenation_factors" title="Concatenation" onclick="add_building_block('bb_concatenation_factors', 'Concatenation', 'Concatenation');">
-                                Concatenation
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_cancel_comm_factors" name="bb_cancel_comm_factors" title="Canceling Common Factors" onclick="add_building_block('bb_cancel_comm_factors', 'Cancel common factors', 'cancelCommonFactors');">
-                                Canceling Common Factors
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_multiply_remaining_factors" name="bb_multiply_remaining_factors" title="Multiply Remaining Factors" onclick="add_building_block('bb_multiply_remaining_factors', 'Multiply factors', 'multiplyFactors');">
-                                Multiply Remaining Factors
-                            </a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" id="bb_improper_to_mixed" name="bb_improper_to_mixed" title="Converting Improper To Mixed Fraction" onclick="add_building_block('bb_improper_to_mixed', 'Convert Improper to Mixed Fraction', 'convertImproperToMixedFraction');">
-                                Converting Improper To Mixed Fraction
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-6 text-center pb-3">
-                    <h6>Operators</h6>
-                    <ul class="list-group">
-                        <li class="list-group-item draggable">
-                            <a href="javascript:void(0)" onclick="Multiply('op_multiply', 'hid_op_multiply_count');">X</a>
-                            <input type="hidden" id="hid_op_multiply_count" name="hid_op_multiply_count" value="0">
-                        </li>
-                        <li class="list-group-item draggable">/</li>
-                        <li class="list-group-item draggable">+</li>
-                        <li class="list-group-item draggable">-</li>
-                        <li class="list-group-item draggable">%</li>
-                        <!-- <li class="list-group-item draggable">`int`</li> -->
-                        
-                    </ul>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 text-center">
-                    <h6>Enum Types</h6>
-                    <ul class="list-group ">
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" class="draggable" onclick="Mixed('enum_mixed_fraction', 'hid_enum_mixed_fraction_count');">
-                                Mixed Fraction
-                            </a>
-                            <input type="hidden" name="hid_enum_mixed_fraction_count" id="hid_enum_mixed_fraction_count" value="0">
-                        </li>
-                        <li class="list-group-item">
-                            <a href="javascript:void(0)" class="draggable" onclick="Improper('enum_improper_fraction', 'hid_enum_improper_fraction_count');">
-                                Improper Fraction
-                            </a>
-                            <input type="hidden" name="hid_enum_improper_fraction_count" id="hid_enum_improper_fraction_count" value="0">
-                        </li>
-                        <li class="list-group-item" onclick="customBlock()">Custom ENUM</li>
-                    </ul>
-                </div>
-                <div class="col-md-6 text-center">
-                    <h6>Text</h6>
-                    <input type="text" class="form-control" name="">
-                    <button class="btn btn-primary m-3">Add</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-7">
-            <div id="div_editor_contain" class="col-md-12 droppable" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:auto;">
-                <div id="div_qtype" class="row p-3">
-                    
-                </div>
-                <div id="div_qtype_solution" class="row p-3">
-                    
-                </div>
-                <!-- <div id="div_step_1" class="row p-3">
-                    <div class="col-md-12">
-                        <span class="badge badge-info badge-pill">Step 1:</span>
+    <div class="jumbotron text-center">
+        <h1>Editor For Question and Solution Type</h1>
+    </div>
+      
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-6 text-center pb-3">
+                        <h6>Building Block List</h6>
+                        <ul class="list-group" style="font-size: 12px;">
+                            <li class="list-group-item">
+                                <a href="javascript:void(0)" id="bb_mixed_to_improper" name="bb_mixed_to_improper" title="Converting Mixed To Improper Fraction" onclick="add_building_block('bb_mixed_to_improper', 'Convert Mixed to Improper Fraction', 'convertMixedToImproperFraction');">
+                                    Converting Mixed To Improper Fraction
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="javascript:void(0)" id="bb_prime_factors" name="bb_prime_factors" title="Find Prime Factors of Fraction" onclick="add_building_block('bb_prime_factors', 'Find the prime factor of num and denom', 'computeListOfPrimeFactors');">
+                                    Find Prime Factors of Fraction
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="javascript:void(0)" id="bb_concatenation_factors" name="bb_concatenation_factors" title="Concatenation" onclick="add_building_block('bb_concatenation_factors', 'Concatenation', 'Concatenation');">
+                                    Concatenation
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="javascript:void(0)" id="bb_cancel_comm_factors" name="bb_cancel_comm_factors" title="Canceling Common Factors" onclick="add_building_block('bb_cancel_comm_factors', 'Cancel common factors', 'cancelCommonFactors');">
+                                    Canceling Common Factors
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="javascript:void(0)" id="bb_multiply_remaining_factors" name="bb_multiply_remaining_factors" title="Multiply Remaining Factors" onclick="add_building_block('bb_multiply_remaining_factors', 'Multiply factors', 'multiplyFactors');">
+                                    Multiply Remaining Factors
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="javascript:void(0)" id="bb_improper_to_mixed" name="bb_improper_to_mixed" title="Converting Improper To Mixed Fraction" onclick="add_building_block('bb_improper_to_mixed', 'Convert Improper to Mixed Fraction', 'convertImproperToMixedFraction');">
+                                    Converting Improper To Mixed Fraction
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                </div> -->
+                    <div class="col-md-6 text-center pb-3">
+                        <h6>Operators</h6>
+                        <ul class="list-group">
+                            <li class="list-group-item draggable">
+                                <a href="javascript:void(0)" onclick="Multiply('op_multiply', 'hid_op_multiply_count');">X</a>
+                                <input type="hidden" id="hid_op_multiply_count" name="hid_op_multiply_count" value="0">
+                            </li>
+                            <li class="list-group-item draggable">/</li>
+                            <li class="list-group-item draggable">+</li>
+                            <li class="list-group-item draggable">-</li>
+                            <li class="list-group-item draggable">%</li>
+                            <!-- <li class="list-group-item draggable">`int`</li> -->
+                            
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <h6>Enum Types</h6>
+                        <ul class="list-group ">
+                            <li class="list-group-item">
+                                <a href="javascript:void(0)" class="draggable" onclick="Mixed('enum_mixed_fraction', 'hid_enum_mixed_fraction_count');">
+                                    Mixed Fraction
+                                </a>
+                                <input type="hidden" name="hid_enum_mixed_fraction_count" id="hid_enum_mixed_fraction_count" value="0">
+                            </li>
+                            <li class="list-group-item">
+                                <a href="javascript:void(0)" class="draggable" onclick="Improper('enum_improper_fraction', 'hid_enum_improper_fraction_count');">
+                                    Improper Fraction
+                                </a>
+                                <input type="hidden" name="hid_enum_improper_fraction_count" id="hid_enum_improper_fraction_count" value="0">
+                            </li>
+                            <li class="list-group-item" onclick="customBlock()">Custom ENUM</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <h6>Text</h6>
+                        <input type="text" class="form-control" name="">
+                        <button class="btn btn-primary m-3">Add</button>
+                    </div>
+                </div>
             </div>
-            <div id="jasonData"></div>
-        </div>
-        <div class="col-md-2">
-            <div class="col-md-12" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px">
-                <button id="btn_add_init" name="btn_add_init" class="btn btn-primary btn-block m-1" style="display: none;">Add Initiations</button>
-                <button id="btn_add_res" name="btn_add_res" class="btn btn-primary btn-block m-1" style="display: none;">Add Result</button>
-                <button id="btn_add_step" name="btn_add_step" class="btn btn-primary btn-block m-1" style="display: none;" onclick="changeCurrentStepCount();">Add Steps</button>
-                <button id="btn_add_solution" name="btn_add_solution" class="btn btn-primary btn-block m-1" style="display: none;" onclick="addSolution();">Add Solutions</button>
-                <hr>
-                <button id="btn_view_qtype" name="btn_view_qtype" class="btn btn-primary btn-block m-1" style="display: none;">View Qtype</button>
-                <button id="btn_new_qtype" name="btn_new_qtype" class="btn btn-primary btn-block m-1" onclick="setObject()">New Qtype</button>
-                <button id="btn_save_qtype" name="btn_save_qtype" class="btn btn-primary btn-block m-1" onclick=" saveFile();">Save Qtype</button>
-                <button id="btn_del_qtype" name="btn_del_qtype" class="btn btn-primary btn-block m-1" onclick="deleteQtype();" style="display: none;">Delete Qtype</button>
-                
-                <input type="hidden" id="hid_newqtypeflag"  name="hid_newqtypeflag" value="0">
-                <input type="hidden" name="hid_cont_add_step_count" id="hid_cont_add_step_count" value="0">
-                <!-- <input type="hidden" name="hid_current_step_count" id="hid_current_step_count" value="1"> -->
+            <div class="col-md-7">
+                <div id="div_editor_contain" class="col-md-12 droppable" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:auto;">
+                    <div id="div_qtype" class="row p-3">
+                        
+                    </div>
+                    <div id="div_qtype_solution" class="row p-3">
+                        
+                    </div>
+                    <!-- <div id="div_step_1" class="row p-3">
+                        <div class="col-md-12">
+                            <span class="badge badge-info badge-pill">Step 1:</span>
+                        </div>
+                    </div> -->
+                </div>
+                <div id="jasonData"></div>
+            </div>
+            <div class="col-md-2">
+                <div class="col-md-12" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px">
+                    <button id="btn_add_init" name="btn_add_init" class="btn btn-primary btn-block m-1" style="display: none;">Add Initiations</button>
+                    <button id="btn_add_res" name="btn_add_res" class="btn btn-primary btn-block m-1" style="display: none;">Add Result</button>
+                    <button id="btn_add_step" name="btn_add_step" class="btn btn-primary btn-block m-1" style="display: none;" onclick="changeCurrentStepCount();">Add Steps</button>
+                    <button id="btn_add_solution" name="btn_add_solution" class="btn btn-primary btn-block m-1" style="display: none;" onclick="addSolution();">Add Solutions</button>
+                    <hr>
+                    <button id="btn_view_qtype" name="btn_view_qtype" class="btn btn-primary btn-block m-1" style="display: none;">View Qtype</button>
+                    <button id="btn_new_qtype" name="btn_new_qtype" class="btn btn-primary btn-block m-1" onclick="setObject()">New Qtype</button>
+                    <button id="btn_save_qtype" name="btn_save_qtype" class="btn btn-primary btn-block m-1" onclick=" saveFile();">Save Qtype</button>
+                    <button id="btn_del_qtype" name="btn_del_qtype" class="btn btn-primary btn-block m-1" onclick="deleteQtype();" style="display: none;">Delete Qtype</button>
+                    
+                    <input type="hidden" id="hid_newqtypeflag"  name="hid_newqtypeflag" value="0">
+                    <input type="hidden" name="hid_cont_add_step_count" id="hid_cont_add_step_count" value="0">
+                    <!-- <input type="hidden" name="hid_current_step_count" id="hid_current_step_count" value="1"> -->
+                </div>
             </div>
         </div>
     </div>
-</div>
     <script src="js/jquery.min.js"></script>
     <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
     <script src="js/jquery-ui.js"></script>
@@ -194,10 +194,10 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
         // =================================================================
         // START : Function For Capitalize The First Letter Of A String
         // =================================================================
-        function jsUcfirst(string) 
-        {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
+            function jsUcfirst(string) 
+            {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
         // =================================================================
         // END : Function For Capitalize The First Letter Of A String
         // =================================================================
@@ -671,34 +671,56 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                             // console.log($('#div_qtype').find('div').length);
                             if( $('#div_qtype').find('div').length > 1)
                             {
-                                if(hid_newqtypeflag != 2)
+                                var stepName = prompt("Please Enter Step Name:");
+                                // console.log(stepName);
+                                if (stepName != null)
                                 {
-                                    $('#hid_newqtypeflag').val(2);
+                                    if(stepName != '')
+                                    {
+                                        if(hid_newqtypeflag != 2)
+                                        {
+                                            $('#hid_newqtypeflag').val(2);
+                                        }
+                                        isSoltion++;
+                                        stepCount = 1;
+                                        bbCount   = 0;
+                                        html_data = '<div class="col-md-12" style="height:30px;background-color:#116cff;color:#FFF;">';
+                                            html_data += 'Display Solution: '+isSoltion;
+                                        html_data += '</div>';
+                                        html_data += '<div id="div_init" class="row">';
+                                            html_data += '<div class="col-md-12">';
+                                                html_data += '<span class="badge badge-info badge-pill">Initiations :</span>';
+                                            html_data += '</div>';
+                                        html_data += '</div>';
+                                        html_data += '<div id="div_step_'+stepCount+'" class="row">';
+                                            // html_data += '<div class="col-md-12">';
+                                            //     html_data += '<span class="badge badge-info badge-pill">Step '+stepCount+':</span>';
+                                            // html_data += '</div>';
+                                            html_data += '<div class="col-md-3">';
+                                                html_data += '<span class="badge badge-info badge-pill">';
+                                                    html_data += 'Step: '+stepCount;
+                                                html_data += '</span>';
+                                            html_data += '</div>';
+                                            html_data += '<div class="col-md-9">';
+                                                html_data += '<h2 id="qtype_name">'+jsUcfirst(stepName)+'</h2>';
+                                            html_data += '</div>';
+                                        html_data += '</div>';
+                                        
+                                        $('.rmBtn').css('display','none');
+                                        createSolutionJson();
+                                        $('#div_qtype_solution').append(html_data); 
+                                    }
+                                    else
+                                    {
+                                        alert('Please Insert the Valid Step name');
+                                        return false;
+                                    }
                                 }
-                                isSoltion++;
-                                stepCount = 1;
-                                bbCount   = 0;
-                                html_data = '<div class="col-md-12" style="height:30px;background-color:#116cff;color:#FFF;">';
-                                    html_data += 'Display Solution: '+isSoltion;
-                                html_data += '</div>';
-                                html_data += '<div id="div_init" class="row p-3">';
-                                    html_data += '<div class="col-md-12">';
-                                        html_data += '<span class="badge badge-info badge-pill">Initiations :</span>';
-                                    html_data += '</div>';
-                                html_data += '</div>';
-                                html_data += '<div id="div_step_'+stepCount+'" class="row p-3">';
-                                    html_data += '<div class="col-md-12">';
-                                        html_data += '<span class="badge badge-info badge-pill">Step '+stepCount+':</span>';
-                                    html_data += '</div>';
-                                html_data += '</div>';
-                                
-                                $('.rmBtn').css('display','none');
-                                createSolutionJson();
-                                $('#div_qtype_solution').append(html_data); 
                             }
                             else
                             {
                                 alert('Sorry, Please add Question Type first!');
+                                return false;
                             }
                         }
                         else
@@ -758,13 +780,40 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                 {
                     if(Display_Part_Validation != 0)
                     {
-                        stepCount++;
-                        bbCount = 0;
-                        
-                        data = "<hr><div id='div_step_"+stepCount+"' class='row p-3'><div class='col-md-12'><span class='badge badge-info badge-pill'>Step "+stepCount+":</span></div></div>";
-                        $('#div_editor_contain').append(data);
+                        var stepName = prompt("Please Enter Step Name:");
+                        // console.log(stepName);
+                        if (stepName != null)
+                        {
+                            if(stepName != '')
+                            {
+                                stepCount++;
+                                bbCount = 0;
+                                
+                                // data = "<hr><div id='div_step_"+stepCount+"' class='row p-3'><div class='col-md-12'><span class='badge badge-info badge-pill'>Step "+stepCount+":</span></div></div>";
 
-                        createCurrentStepJson();        
+                                data = '<hr><div id="div_step_'+stepCount+'" class="row">';
+                                    // data += '<div class="col-md-12">';
+                                    //     data += '<span class="badge badge-info badge-pill">Step '+stepCount+':</span>';
+                                    // data += '</div>';
+                                    data += '<div class="col-md-3">';
+                                        data += '<span class="badge badge-info badge-pill">';
+                                            data += 'Step: '+stepCount;
+                                        data += '</span>';
+                                    data += '</div>';
+                                    data += '<div class="col-md-9">';
+                                        data += '<h2 id="qtype_name">'+jsUcfirst(stepName)+'</h2>';
+                                    data += '</div>';
+                                data += '</div>';
+                                $('#div_editor_contain').append(data);
+
+                                createCurrentStepJson();
+                            }
+                            else
+                            {
+                                alert('Please Insert the Valid Step name');
+                                return false;
+                            }
+                        }
                     }
                     else
                     {
