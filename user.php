@@ -1,6 +1,7 @@
 <?php
 
 
+
 $json_data = file_get_contents('abc.json');
 $json_arr  = json_decode($json_data,true);
 
@@ -33,6 +34,24 @@ session_destroy();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
+    <?php
+function getMixedFraction()
+{
+    $w = rand(1,20);
+    $n = rand(1,9);
+    $d = rand(1,9);
+
+    if($n < $d)
+    {
+        $n = $d;
+        $d = $n;
+    }
+
+    echo '&nbsp;&nbsp;========'.$w.'<br>';
+    echo '&nbsp;&nbsp;========'.$n.'<br>';
+    echo '&nbsp;&nbsp;========'.$d.'<br>';
+}
+    ?>
 </head>
 <body>
 
@@ -43,7 +62,11 @@ session_destroy();
 <div id="question" class="row">
     <?php
     foreach ($json_arr['Question_Format'] as $question) {
-        var_dump($question);
+        
+        if($question['Name']=='enum_mixed_fraction')
+        {
+            echo getMixedFraction();
+        }
     }
     ?>
 </div>
