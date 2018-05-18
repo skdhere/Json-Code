@@ -105,14 +105,14 @@ if x1 == "convertMixedToImproperFraction":
   my_list = y1.split(",") #convert string to array
   my_list = list(map(int, my_list)) #Convert all strings in a list to int
   tv1 = convertMixedToImproperFraction(my_list)
-  print(tv1[0:2]) 
+  print tv1[0:2]
 
 if x1 == "computeListOfPrimeFactors":
   my_list = y1.split(",") #convert string to array
   my_list = list(map(int, my_list)) #Convert all strings in a list to int
   for i in range(len(my_list)):
      computeval = computeListOfPrimeFactors(my_list[i])
-     print(computeval,"<br>")
+     print computeval,"<br>"
 
 if x1 == "cancelCommonFactors":
   z1 = sys.argv[3]
@@ -121,13 +121,13 @@ if x1 == "cancelCommonFactors":
   my_list2 = z1.split(",") #convert string to array
   my_list2 = list(map(int, my_list2)) #Convert all strings in a list to int
   finalNUMfactors,finalDEMfactors = cancelCommonFactors(my_list,my_list2)
-  print(finalNUMfactors,"<br>",finalDEMfactors)
+  print finalNUMfactors,"<br>",finalDEMfactors
 
 if x1 == "multiplyFactors":
   my_list = y1.split(",") #convert string to array
   my_list = list(map(int, my_list)) #Convert all strings in a list to int
   str_mul_fact = multiplyFactors(my_list)
-  print(str_mul_fact)
+  print str_mul_fact
 
 if x1 == "convertImproperToMixedFraction":
   z1 = sys.argv[3]
@@ -138,7 +138,7 @@ if x1 == "convertImproperToMixedFraction":
   res[1] = my_list2
   # print(res)
   result = convertImproperToMixedFraction(res)
-  print(result)
+  print result
 
   # my_list = y1.split(",") #convert string to array
   # my_list = list(map(int, my_list)) #Convert all strings in a list to int

@@ -42,8 +42,8 @@
                 "Format": [
                   {
                     "BB_Function":"convertMixedToImproperFraction",
-                    "Input":"v1",
-                    "Output":"tv1"
+                    "Input":"v2",
+                    "Output":"tv2"
                   }
                 ]
               }
@@ -70,8 +70,8 @@
                 "Format": [
                   {
                     "BB_Function":"computeListOfPrimeFactors",
-                    "Input":"tv1n1",
-                    "Output":"fn1"
+                    "Input":"tv1",
+                    "Output":"fn1,fd1"
                   }
                 ]
               },
@@ -80,8 +80,8 @@
                 "Format": [
                   {
                     "BB_Function":"computeListOfPrimeFactors",
-                    "Input":"tv1d1",
-                    "Output":"fd1"
+                    "Input":"tv2",
+                    "Output":"fn2,fd2"
                   }
                 ]
               },
@@ -240,12 +240,12 @@
                 ]
               },
               {
-                "BB_Name": "Convert Mixed to Improper",
+                "BB_Name": "Convert Mixed",
                 "Format": [
                   {
                     "BB_Function":"convertMixedToImproperFraction",
-                    "Input":"v1",
-                    "Output":"tv1"
+                    "Input":"v2",
+                    "Output":"tv2"
                   }
                 ]
               }

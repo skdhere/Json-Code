@@ -1,21 +1,45 @@
 <?php
     $json_data = file_get_contents('abc.json');
     $json_arr  = json_decode($json_data,true);
+    
 
-    echo $json_arr['Qtype_Name'];
+    function rmSquare($str)
+    {
+        $final_str = trim((str_replace(array('[',']',' '),array('','',''), $str)));
+        return $final_str;
+    }
 
-    echo count($json_arr['Solutions'][0]['Steps']);
+    function strNum($num1)
+    {
+        $final_num = rmSquare(substr($num1, 0,strpos($num1, '<br>')));
+        return $final_num;
+    }
+
+    function strDen($den1)
+    {
+        $final_den = rmSquare(str_replace('<br>', '',strstr($den1, '<br>')));
+        return $final_den;
+    }
+
+
 
     $func_arr  = array();
     foreach($json_arr['Solutions'][0]['Steps'] as $steps)
     {
-        foreach($steps['BB_Format'] as $step_format)
-        {
-            array_push($func_arr,$step_format['Format'][0]['BB_Function']);
-        }
+        array_push($func_arr,$steps);
     }
+    
+    $var_arr = array();
 
-    var_dump($func_arr);
+    $output    = array();
+    function setVariables($w,$n,$d)
+    {
+        global $output;
+        global $var_arr;
+        $v  = $n.','.$d.','.$w;
+
+        $output['v'.(count($output)+1)]  = $v;
+    }
 
     function getMixedFraction()
     {
@@ -23,29 +47,26 @@
         $n = rand(1,9);
         $d = rand(1,9);
 
-        if($n < $d)
+        //==============Start : Done by satish 13may2018===========//
+        if($n > $d)
         {
-            $n = $d;
-            $d = $n;
-            if($n == $d)
+            $temp = $n;
+            $n    = $d;
+            $d    = $temp;
+        }
+        elseif($n == $d)
+        {
+            if($n==1) // check n and d is equal or not
             {
-                if($n == 9)
-                {
-                    $d = $d - 1;
-                }
-                else
-                {
-                    $n = $n + 1;
-                }
+                $d = $d + 1;
+            }else
+            {
+                $n = $n - 1;
             }
         }
-        else
-        {
-            if($n == $d)
-            {
-                $n = $n + 1;
-            }
-        }
+        //==============End : Done by satish 13may2018===========//
+
+        setVariables($w,$n,$d);
 
         $html_data = '';
 
@@ -63,10 +84,10 @@
                 $html_data .= '</tr>';
             $html_data .= '</table>';  
         $html_data .= '</div>';
-
         return $html_data;
     }
 
+    
     function getOperator($op_val)
     {
         $html_data = '';    
@@ -88,6 +109,16 @@
 
         return $html_data;
     }
+
+
+    
+    function shellExcecute($func_name,$param)
+    {
+        $url = "C:/Python27/python.exe satish-test.py $func_name $param";
+        $res = shell_exec($url);
+        return $res;
+    }
+
 
     session_start();
     session_destroy();
@@ -114,7 +145,7 @@
         </div>
         <div class="col-md-8">
             <div id="div_editor_contain" class="col-md-12 droppable">
-                <div class="row p-3">
+                <div class="row p-3" id="question">
                 <?php
                 foreach ($json_arr['Question_Format'] as $question) 
                 {
@@ -128,6 +159,9 @@
                         echo getOperator('op_multiply');
                     }
                 }
+
+                // $v1 = $var_arr[0];
+                // $v2 = $var_arr[1];
                 ?>
                 </div>
             </div>    
@@ -137,7 +171,73 @@
         </div>
     </div>
 </div>
+<?php
 
+$output['v1'] ="3,4,3";
+$output['v2'] ="1,3,3";
+
+$k = 1;
+$v = 'n';
+foreach ($func_arr as $step) {
+    foreach($step['BB_Format'] as $format)
+    {
+        
+            $frmt = $format['Format'][0];
+            $out  = shellExcecute($frmt['BB_Function'],@$output[$frmt['Input']]);
+            
+            if($frmt['BB_Function']=='multiplyFactors') echo $frmt['BB_Function'];
+            
+            if($frmt['BB_Function']=='cancelCommonFactors')
+            {
+                $p = @$output['FConNumFactors'].' '.@$output['FConDenumFactors'];
+                $out  = shellExcecute($frmt['BB_Function'],@$p);
+                 $out  = rmSquare($out);
+                if($frmt['BB_Function']=='multiplyFactors') echo $frmt['BB_Function'];echo $out;
+                $out  = rmSquare($out);
+                echo '------------';
+                $bb = explode('<br>',$out);
+
+                if(!isset($output['FNum']) && $output['FDenum']=="")
+                {
+                     $output['FNum'] =$bb[0];
+                }
+
+                if(!isset($output['FDenum']) && $output['FDenum']=="")
+                {
+                     $output['FDenum'] =$bb[1];
+                }
+               
+
+               
+             
+                 // echo $result_num  = strNum($out); echo '<br>';
+                 
+            }
+           if($frmt['BB_Function'] =='computeListOfPrimeFactors')
+            {
+                $result_num  = strNum($out);
+                $result_deno = strDen($out);
+                
+                $output['fn'.$k]     = $result_num;
+                $output['fd'.$k]     = $result_deno;
+                $k++;
+
+            }
+            elseif($frmt['BB_Function'] =='Concatenation')
+            {
+                $output[$frmt['Output']] = $output['f'.$v.'1'].','.$output['f'.$v.'2'];
+                $v = 'd';
+            }else
+            { 
+                $out  = rmSquare($out);
+                $output[$frmt['Output']] = $out;
+            }
+    }
+}
+
+var_dump($output);
+
+?>
 <br>
   
 <div class="container-fluid">
@@ -187,29 +287,24 @@
         <div class="col-md-7">
             <div id="div_editor_contain" class="col-md-12 droppable" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:auto;">
                 <div id="div_qtype" class="row p-3">
-                    <div class="col-md-12">
-                        <span class="badge badge-info badge-pill">Step 1:</span>
-                    </div>
+                    
+                        
+                    
                 </div>
             </div>
              <div id="jasonData"></div>
         </div>
         <div class="col-md-2">
             <div class="col-md-12" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px">
-                <button class="btn btn-primary btn-block m-1">Add Initiations</button>
-                <button class="btn btn-primary btn-block m-1">Add Result</button>
+                <button class="btn btn-primary btn-block m-1" id="initBtn" onclick="init()">Add Initiations</button>
+               
                 <button class="btn btn-primary btn-block m-1" onclick="changeCurrentStepCount();">
                     Add Steps
                 </button>
-                <input type="hidden" name="hid_cont_add_step_count" id="hid_cont_add_step_count" value="0">
-                <input type="hidden" name="hid_current_step_count" id="hid_current_step_count" value="1">
-                <button class="btn btn-primary btn-block m-1">Add Solutions</button>
                 <hr>
+<!-- 
                 <button class="btn btn-primary btn-block m-1">View Qtype</button>
-                <button class="btn btn-primary btn-block m-1">New Qtype</button>
-                <input type="hidden" id="hid_newqtypeflag"  name="hid_newqtypeflag" value="0">
-                <button class="btn btn-primary btn-block m-1">Save Qtype</button>
-                <button class="btn btn-primary btn-block m-1">Delete Qtype</button>
+                <button class="btn btn-primary btn-block m-1">New Qtype</button> -->
             </div>
         </div>
     </div>
@@ -229,8 +324,15 @@
             }
         isSoltion = false;
         enumCount = 0;
+        
+        function init()
+        {
+            var question = $('#question').html();
+            $('#div_qtype').append('<div class="col-md-12"><span class="badge badge-info badge-pill">Initiations:</span></div>');
+            $('#div_qtype').append(question);
 
-
+            $('#initBtn').css('display','none');
+        }
         //set blank when adding new question type
         function getRmElement(btnCount)
         {
@@ -270,9 +372,9 @@
                 html += '<table>';
                     html += '<tr>';
                         html += '<td>';
-                            html += '<div><input type="text" name="v1n1" id="v1n1" class="form-control" name=""></div>';
+                            html += '<div><input type="text" name="v1n1" id="v1n1" class="form-control numsonly" name="" onkeypress="return numsonly(event)" maxlength="3" id="v1n1"></div>';
                             html += '<hr>';
-                            html += '<div><input type="text" name="v1d1" id="v1d1" class="form-control" name=""></div>';
+                            html += '<div><input type="text" name="v1d1" id="v1d1" class="form-control numsonly" onkeypress="return numsonly(event)" name="" maxlength="3" id="v1d1"></div>';
                         html += '</td>';
                     html += '</tr>';
                 html += '</table>';  
@@ -287,15 +389,15 @@
                 html += '<table>';
                     html += '<tr>';
                         html += '<td>';
-                            html += '<div><input type="text" name="v2n2" id="v2n2" class="form-control" name=""></div>';
+                            html += '<div><input type="text" name="v2n2" id="v2n2" class="form-control" name="" onkeypress="return numsonly(event)" maxlength="3" id="v2n2"></div>';
                             html += '<hr>';
-                            html += '<div><input type="text" name="v2d2" id="v2d2" class="form-control" name=""></div>';
+                            html += '<div><input type="text" name="v2d2" id="v2d2" class="form-control" name="" onkeypress="return numsonly(event)" maxlength="3"  id="v2d2"></div>';
                         html += '</td>';
                     html += '</tr>';
                 html += '</table>';  
             html += '</div>';
 
-            html += '<button class="btn btn-success" style="padding:0px" onclick="">Check </button>';
+            html += '<button class="btn btn-success" style="padding:0px" onclick="check()">Check </button>';
 
             html += '</div>';
 
@@ -381,12 +483,12 @@
                 html += '<table>';
                     html += '<tr>';
                         html += '<td>';
-                            html += '<div><input type="" class="form-control" name=""></div>';
+                            html += '<div><input type="" class="form-control numsonly" name=""></div>';
                         html += '</td>';
                         html += '<td>';
-                            html += '<div><input type="" class="form-control" name=""></div>';
+                            html += '<div><input type="" class="form-control numsonly" name=""></div>';
                             html += '<hr>';
-                            html += '<div><input type="" class="form-control" name=""></div>';
+                            html += '<div><input type="" class="form-control numsonly" name=""></div>';
                         html += '</td>';
                     html += '</tr>';
                 html += '</table>';  
@@ -521,8 +623,15 @@
 
             $('#question').html(html);
         }
+
+        function check()
+        {
+
+        }
+
         </script>
 
     <script type="text/javascript" src="js/ASCII.js"></script>
+    <script type="text/javascript" src="custom.js"></script>
 </body>
 </html>
