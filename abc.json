@@ -158,8 +158,8 @@
                 "Format": [
                   {
                     "BB_Function":"cancelCommonFactors",
-                    "Input":"FConNumFactors,FConDenumFactors",
-                    "Output":"FNumFactors,FDenumFactors"
+                    "Input":"FConNumFactors FConDenumFactors",
+                    "Output":"FNumFactors FDenumFactors"
                   }
                 ]
               }
@@ -208,7 +208,7 @@
                 "Format": [
                   {
                     "BB_Function":"convertImproperToMixedFraction",
-                    "Input":"x",
+                    "Input":"FNum FDenum",
                     "Output":"FResult"
                   }
                 ]

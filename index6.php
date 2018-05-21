@@ -47,7 +47,7 @@ echo "Prime Factor for denominator Variable 2: ".$result4_deno."<br>";
 echo "Concatenation of numerators (v1 & v2) = ".$conNUm."<br>";
 echo "Concatenation of numerators (v1 & v2) = ".$conDen."<br>";
 
-echo $param5 = "C:/Users/punit.RIVERBRIDGE/AppData/Local/Programs/Python/Python37-32/python.exe test2.py cancelCommonFactors $conNUm $conDen";
+$param5 = "C:/Users/punit.RIVERBRIDGE/AppData/Local/Programs/Python/Python37-32/python.exe test2.py cancelCommonFactors $conNUm $conDen";
 $result5 = shell_exec($param5);
 $result5_num = Str_num($result5);
 $result5_deno = Str_den($result5);
