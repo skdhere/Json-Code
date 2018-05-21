@@ -19,7 +19,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Example</title>
+    <title>Bootstrap Example</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -39,7 +39,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                         <h6>Building Block List</h6>
                         <ul class="list-group" style="font-size: 12px;">
                             <li class="list-group-item">
-                                <a href="javascript:void(0)" id="bb_mixed_to_improper" name="bb_mixed_to_improper" title="Converting Mixed To Improper Fraction" onclick="add_building_block('bb_mixed_to_improper', 'Convert Mixed to Improper Fraction', 'convertMixedToImproperFraction');">
+                                <a href="javascript:void(0)" id="bb_mixed_to_improper" name="bb_mixed_to_improper" title="Converting Mixed To Improper Fraction" onclick="add_building_block('bb_mixed_to_improper', 'Mixed to Improper Fraction', 'convertMixedToImproperFraction');">
                                     Converting Mixed To Improper Fraction
                                 </a>
                             </li>
@@ -158,6 +158,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
+        var kk=0;
         ar = {
                 "QType": 1,
                 "Qtype_Name": "Multiplication of 2 Mixed fraction",
@@ -439,6 +440,12 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                          "D"   : "",
                          "W"   : ""
                         }
+                        if(isSoltion==0)
+                        {
+                             kk++;
+                        }
+                   
+
                 }else
                 {
                     b = {"Name": param_val,
@@ -450,6 +457,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 
             function createJson(param_val)
             {
+
                 b = checkParamType(param_val);
                 
                 ar.Question_Format.push(b);
@@ -713,6 +721,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                                         $('.rmBtn').css('display','none');
                                         createSolutionJson();
                                         $('#div_qtype_solution').append(html_data); 
+                                        init();
                                     }
                                     else
                                     {
@@ -861,22 +870,64 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                 html_data = '';
                 if(param_val == 'bb_mixed_to_improper' || param_val == 'bb_prime_factors' || param_val == 'bb_multiply_remaining_factors' || param_val == 'bb_improper_to_mixed')
                 {
-                    html_data += '<td>';
-                        html_data += '<div class="row">';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' = ';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-7">';
-                                html_data += building_block_name;
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
-                            html_data += '</div>';
-                        html_data += '</div>';
-                    html_data += '</td>';
+
+                    if(param_val == 'bb_mixed_to_improper')
+                    {
+                        for(var n=1;n<=kk;n++)
+                        {
+                            html_data += '<tr>';
+                            html_data += '<td>';
+                                html_data += '<div class="row">';
+                                    html_data += '<div class="col-md-2">';
+                                        html_data += '<input type="" class="form-control" value="tv'+n+'" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
+                                    html_data += '</div>';
+                                    html_data += '<div class="col-md-1">';
+                                        html_data += ' = ';
+                                    html_data += '</div>';
+                                    html_data += '<div class="col-md-7">';
+                                        html_data += building_block_name;
+                                    html_data += '</div>';
+                                    html_data += '<div class="col-md-2">';
+                                        html_data += '<input type="" class="form-control" value="v'+n+'" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
+                                    html_data += '</div>';
+                                html_data += '</div>';
+                            html_data += '</td>';
+                            html_data += '</tr>';
+                        }
+                    }
+
+                    if(param_val == 'bb_prime_factors')
+                    {
+                        var pfact = kk * 2;
+                        for(var n=1;n<=kk;n++)
+                        {
+                            html_data += '<tr>';
+                            html_data += '<td>';
+                                html_data += '<div class="row">';
+                                    html_data += '<div class="col-md-2">';
+                                        html_data += '<input type="" class="form-control" value="fn'+n+' fd'+n+'" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
+                                    html_data += '</div>';
+                                    html_data += '<div class="col-md-1">';
+                                        html_data += ' = ';
+                                    html_data += '</div>';
+                                    html_data += '<div class="col-md-7">';
+                                        html_data += building_block_name;
+                                    html_data += '</div>';
+                                    html_data += '<div class="col-md-2">';
+                                        html_data += '<input type="" class="form-control" value="tv'+n+'" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
+                                    html_data += '</div>';
+                                html_data += '</div>';
+                            html_data += '</td>';
+                            html_data += '</tr>';
+
+                            setSolutionVar(isSoltion, stepCount, bbCount, 'fn'+n+' fd'+n, 'Output');
+                            setSolutionVar(isSoltion, stepCount, bbCount, 'tv'+n , 'Input');
+                        }
+
+
+                    }
+                    
+                    
                 }
                 else if(param_val == 'bb_concatenation_factors')
                 {
@@ -1052,6 +1103,30 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
         // =================================================================
         // END : Function for adding building-block
         // =================================================================
+
+        function init()
+        {
+
+            console.log(ar.Question_Format);
+            console.log(ar.Question_Format.length);
+            var html ='Consider ';
+            qFormat  = ar.Question_Format;
+
+            var var_count =1;
+            for(var i=0;i<qFormat.length;i++)
+            {
+                console.log(qFormat[i].Name);
+                if(qFormat[i].Name =='op_multiply')
+                {
+                     html +=' * ';
+                }else
+                {
+                    html += 'v'+var_count++;
+                }
+            }
+
+            $('#div_step_'+stepCount).append(html); 
+        } 
 
         function customBlock()
         {

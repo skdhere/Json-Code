@@ -19,7 +19,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Example</title>
+    <title>Bootstrap Example</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -39,7 +39,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                         <h6>Building Block List</h6>
                         <ul class="list-group" style="font-size: 12px;">
                             <li class="list-group-item">
-                                <a href="javascript:void(0)" id="bb_mixed_to_improper" name="bb_mixed_to_improper" title="Converting Mixed To Improper Fraction" onclick="add_building_block('bb_mixed_to_improper', 'Convert Mixed to Improper Fraction', 'convertMixedToImproperFraction');">
+                                <a href="javascript:void(0)" id="bb_mixed_to_improper" name="bb_mixed_to_improper" title="Converting Mixed To Improper Fraction" onclick="ShowPopup('bb_mixed_to_improper', 'Mixed to Improper Fraction', 'convertMixedToImproperFraction');">
                                     Converting Mixed To Improper Fraction
                                 </a>
                             </li>
@@ -151,6 +151,24 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary"></button> -->
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <script src="js/jquery.min.js"></script>
     <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
     <script src="js/jquery-ui.js"></script>
@@ -158,6 +176,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
+        var kk=0;
         ar = {
                 "QType": 1,
                 "Qtype_Name": "Multiplication of 2 Mixed fraction",
@@ -439,6 +458,12 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                          "D"   : "",
                          "W"   : ""
                         }
+                        if(isSoltion==0)
+                        {
+                             kk++;
+                        }
+                   
+
                 }else
                 {
                     b = {"Name": param_val,
@@ -450,6 +475,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 
             function createJson(param_val)
             {
+
                 b = checkParamType(param_val);
                 
                 ar.Question_Format.push(b);
@@ -713,6 +739,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                                         $('.rmBtn').css('display','none');
                                         createSolutionJson();
                                         $('#div_qtype_solution').append(html_data); 
+                                        init();
                                     }
                                     else
                                     {
@@ -838,220 +865,286 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
         // =================================================================
         // START : Function for adding building-block
         // =================================================================
-            var steps_arr = [];
+        var steps_arr = [];
 
-            function setSolutionVar(solutionCount, stepCount, bbCount, value, io_type)
+        function setSolutionVar(solutionCount, stepCount, bbCount, value, io_type)
+        {
+            console.log(solutionCount+'<==>'+stepCount+'<==>'+bbCount+'<==>'+value+'<==>'+io_type);
+            if(io_type == 'Output')
             {
-                console.log(solutionCount+'<==>'+stepCount+'<==>'+bbCount+'<==>'+value+'<==>'+io_type);
-                if(io_type == 'Output')
-                {
-                    ar.Solutions[solutionCount-1].Steps[stepCount-1].BB_Format[bbCount-1].Format[0].Output = value;
-                }
-                else if(io_type == 'Input')
-                {
-                    ar.Solutions[solutionCount-1].Steps[stepCount-1].BB_Format[bbCount-1].Format[0].Input = value;  
-                }
-                console.log(ar);
-                arr = JSON.stringify(ar);
-                $('#jasonData').html(arr);
+                ar.Solutions[solutionCount-1].Steps[stepCount-1].BB_Format[bbCount-1].Format[0].Output = value;
             }
-
-            function getFormat(param_val, building_block_name, enumCount)
+            else if(io_type == 'Input')
             {
-                html_data = '';
-                if(param_val == 'bb_mixed_to_improper' || param_val == 'bb_prime_factors' || param_val == 'bb_multiply_remaining_factors' || param_val == 'bb_improper_to_mixed')
+                ar.Solutions[solutionCount-1].Steps[stepCount-1].BB_Format[bbCount-1].Format[0].Input = value;  
+            }
+            console.log(ar);
+            arr = JSON.stringify(ar);
+            $('#jasonData').html(arr);
+        }
+
+        function getFormat(param_val, building_block_name, enumCount,input)
+        {
+            html_data = '';
+            if(param_val == 'bb_mixed_to_improper' || param_val == 'bb_prime_factors' || param_val == 'bb_multiply_remaining_factors' || param_val == 'bb_improper_to_mixed')
+            {
+
+                if(param_val == 'bb_mixed_to_improper')
                 {
-                    html_data += '<td>';
-                        html_data += '<div class="row">';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
+                    // for(var n=1;n<=kk;n++)
+                    // {
+                        html_data += '<tr>';
+                        html_data += '<td>';
+                            html_data += '<div class="row">';
+                                html_data += '<div class="col-md-2">';
+                                    html_data += '<input type="" class="form-control" value="t'+input+'" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
+                                html_data += '</div>';
+                                html_data += '<div class="col-md-1">';
+                                    html_data += ' = ';
+                                html_data += '</div>';
+                                html_data += '<div class="col-md-7">';
+                                    html_data += building_block_name;
+                                html_data += '</div>';
+                                html_data += '<div class="col-md-2">';
+                                    html_data += '<input type="" class="form-control" value="'+input+'" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
+                                html_data += '</div>';
                             html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' = ';
+                        html_data += '</td>';
+                        html_data += '</tr>';
+
+                        setSolutionVar(isSoltion, stepCount, bbCount, 't'+input, 'Output');
+                        setSolutionVar(isSoltion, stepCount, bbCount, input, 'Input');
+                    // }
+                }
+
+                if(param_val == 'bb_prime_factors')
+                {
+                    var pfact = kk * 2;
+                    // for(var n=1;n<=kk;n++)
+                    // {
+                        html_data += '<tr>';
+                        html_data += '<td>';
+                            html_data += '<div class="row">';
+                                html_data += '<div class="col-md-2">';
+                                    html_data += '<input type="" class="form-control" value="fn" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
+                                html_data += '</div>';
+                                html_data += '<div class="col-md-1">';
+                                    html_data += ' = ';
+                                html_data += '</div>';
+                                html_data += '<div class="col-md-7">';
+                                    html_data += building_block_name;
+                                html_data += '</div>';
+                                html_data += '<div class="col-md-2">';
+                                    html_data += '<input type="" class="form-control" value="tv" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
+                                html_data += '</div>';
                             html_data += '</div>';
-                            html_data += '<div class="col-md-7">';
-                                html_data += building_block_name;
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
-                            html_data += '</div>';
+                        html_data += '</td>';
+                        html_data += '</tr>';
+
+                        // setSolutionVar(isSoltion, stepCount, bbCount, 'fn'+n+' fd'+n, 'Output');
+                        // setSolutionVar(isSoltion, stepCount, bbCount, 'tv'+n , 'Input');
+                    // }
+                }
+            }
+            else if(param_val == 'bb_concatenation_factors')
+            {
+                html_data += '<td>';
+                    html_data += '<div class="row">';
+                        html_data += '<div class="col-md-2">';
+                            html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
                         html_data += '</div>';
-                    html_data += '</td>';
-                }
-                else if(param_val == 'bb_concatenation_factors')
-                {
-                    html_data += '<td>';
-                        html_data += '<div class="row">';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' = ';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-4">';
-                                html_data += building_block_name;
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' + ';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
-                            html_data += '</div>';
+                        html_data += '<div class="col-md-1">';
+                            html_data += ' = ';
                         html_data += '</div>';
-                    html_data += '</td>';
-                }
-                else if(param_val == 'bb_cancel_comm_factors')
-                {
-                    html_data += '<td>';
-                        html_data += '<div class="row">';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-1">';
-                                html_data += ' = ';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-3">';
-                                html_data += building_block_name;
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value);">';
-                            html_data += '</div>';
-                            html_data += '<div class="col-md-2">';
-                                html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value);">';
-                            html_data += '</div>';
+                        html_data += '<div class="col-md-4">';
+                            html_data += building_block_name;
                         html_data += '</div>';
-                    html_data += '</td>';
-                }
-                return html_data;
+                        html_data += '<div class="col-md-2">';
+                            html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
+                        html_data += '</div>';
+                        html_data += '<div class="col-md-1">';
+                            html_data += ' + ';
+                        html_data += '</div>';
+                        html_data += '<div class="col-md-2">';
+                            html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Input\');">';
+                        html_data += '</div>';
+                    html_data += '</div>';
+                html_data += '</td>';
             }
-
-            function getBuildingBlockArray(building_block_name, function_name)
+            else if(param_val == 'bb_cancel_comm_factors')
             {
-                BuildingBlockData =  {
-                                    "BB_Name": building_block_name,
-                                    "Format": [
-                                        {
-                                            "BB_Function": function_name,
-                                            "Input":"",
-                                            "Output":""
-                                        }
-                                    ]
-                                };
-                return BuildingBlockData;
+                html_data += '<td>';
+                    html_data += '<div class="row">';
+                        html_data += '<div class="col-md-2">';
+                            html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
+                        html_data += '</div>';
+                        html_data += '<div class="col-md-2">';
+                            html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value, \'Output\');">';
+                        html_data += '</div>';
+                        html_data += '<div class="col-md-1">';
+                            html_data += ' = ';
+                        html_data += '</div>';
+                        html_data += '<div class="col-md-3">';
+                            html_data += building_block_name;
+                        html_data += '</div>';
+                        html_data += '<div class="col-md-2">';
+                            html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value);">';
+                        html_data += '</div>';
+                        html_data += '<div class="col-md-2">';
+                            html_data += '<input type="" class="form-control" value="" name="" onchange="setSolutionVar('+isSoltion+', '+stepCount+', '+bbCount+', this.value);">';
+                        html_data += '</div>';
+                    html_data += '</div>';
+                html_data += '</td>';
             }
+            return html_data;
+        }
 
-            function getBuildingBlockDisplayArray(param_val)
+        function getBuildingBlockArray(building_block_name, function_name)
+        {
+            BuildingBlockData =  {
+                                "BB_Name": building_block_name,
+                                "Format": [
+                                    {
+                                        "BB_Function": function_name,
+                                        "Input":"",
+                                        "Output":""
+                                    }
+                                ]
+                            };
+            return BuildingBlockData;
+        }
+
+        function getBuildingBlockDisplayArray(param_val)
+        {
+            if(param_val=='enum_improper_fraction')
             {
-                if(param_val=='enum_improper_fraction')
+                BuildingBlockDisplayData = {
+                        "Name": param_val,
+                        "Type": "variable" 
+                };
+            }
+            else if(param_val=='enum_mixed_fraction')
+            {
+                BuildingBlockDisplayData = {
+                        "Name": param_val,
+                        "Type": "variable" 
+                };
+            }
+            else if(param_val=='op_multiply')
+            {
+                BuildingBlockDisplayData = {
+                        "Name": param_val,
+                        "Type": "operator"
+                };
+            }  
+
+            return BuildingBlockDisplayData;
+        }
+
+        function createBuildingBlockJson(building_block_name, function_name)
+        {
+            BuildingBlockData = getBuildingBlockArray(building_block_name, function_name);
+
+            ar.Solutions[isSoltion-1].Steps[stepCount-1].BB_Format.push(BuildingBlockData);
+
+            // console.log(ar);
+            $('#jasonData').html(ar);
+            arr = JSON.stringify(ar);
+            $('#jasonData').html(arr);
+        }
+
+        function createBuildingBlockDisplayJson(param_val)
+        {
+            BuildingBlockDisplayArrayData = getBuildingBlockDisplayArray(param_val);
+            
+            ar.Solutions[isSoltion-1].Steps[stepCount-1].Display.push(BuildingBlockDisplayArrayData);
+
+            // console.log(ar);
+            $('#jasonData').html(ar);
+            arr = JSON.stringify(ar);
+            $('#jasonData').html(arr);
+        }
+
+        function add_building_block(param_val, building_block_name, function_name,input='')
+        {
+            // console.log(param_val+' '+building_block_name);
+            var hid_newqtypeflag = $('#hid_newqtypeflag').val();
+            $('#modal').modal('hide');
+
+            if(hid_newqtypeflag != 0)
+            {
+                if(isSoltion != 0)
                 {
-                    BuildingBlockDisplayData = {
-                            "Name": param_val,
-                            "Type": "variable" 
-                    };
-                }
-                else if(param_val=='enum_mixed_fraction')
-                {
-                    BuildingBlockDisplayData = {
-                            "Name": param_val,
-                            "Type": "variable" 
-                    };
-                }
-                else if(param_val=='op_multiply')
-                {
-                    BuildingBlockDisplayData = {
-                            "Name": param_val,
-                            "Type": "operator"
-                    };
-                }  
-
-                return BuildingBlockDisplayData;
-            }
-
-            function createBuildingBlockJson(building_block_name, function_name)
-            {
-                BuildingBlockData = getBuildingBlockArray(building_block_name, function_name);
-
-                ar.Solutions[isSoltion-1].Steps[stepCount-1].BB_Format.push(BuildingBlockData);
-
-                // console.log(ar);
-                $('#jasonData').html(ar);
-                arr = JSON.stringify(ar);
-                $('#jasonData').html(arr);
-            }
-
-            function createBuildingBlockDisplayJson(param_val)
-            {
-                BuildingBlockDisplayArrayData = getBuildingBlockDisplayArray(param_val);
-                
-                ar.Solutions[isSoltion-1].Steps[stepCount-1].Display.push(BuildingBlockDisplayArrayData);
-
-                // console.log(ar);
-                $('#jasonData').html(ar);
-                arr = JSON.stringify(ar);
-                $('#jasonData').html(arr);
-            }
-
-            function add_building_block(param_val, building_block_name, function_name)
-            {
-                // console.log(param_val+' '+building_block_name);
-                var hid_newqtypeflag = $('#hid_newqtypeflag').val();
-
-                if(hid_newqtypeflag != 0)
-                {
-                    if(isSoltion != 0)
+                    enumCount++;
+                    bbCount++;
+                    if(hid_newqtypeflag == 2)
                     {
-                        enumCount++;
-                        bbCount++;
-                        if(hid_newqtypeflag == 2)
-                        {
-                            // Calling Function For Creating JSON for Building Block
-                            createBuildingBlockJson(building_block_name, function_name);
-                        }
+                        // Calling Function For Creating JSON for Building Block
+                        createBuildingBlockJson(building_block_name, function_name);
+                    }
 
-                        html = '<div id="div'+enumCount+'" class="col-md-12">';
-                            html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                                html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \'Solution\', \'BB_Format\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
-                            html += '</div>';
-                            html += '<table>';
-                                html += '<tr>';
-                                    html += getFormat(param_val, building_block_name, enumCount);
-                                html += '</tr>';
-                            html += '</table>'; 
-                            // html += '<div style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);overflow-y:auto;">';
-                            //     html += building_block_name;
-                            // html += '</div>';
+                    html = '<div id="div'+enumCount+'" class="col-md-12">';
+                        html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
+                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \'Solution\', \'BB_Format\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                         html += '</div>';
+                        html += '<table>';
+                            html += '<tr>';
+                                html += getFormat(param_val, building_block_name, enumCount,input);
+                            html += '</tr>';
+                        html += '</table>'; 
+                        // html += '<div style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);overflow-y:auto;">';
+                        //     html += building_block_name;
+                        // html += '</div>';
+                    html += '</div>';
 
-                        $('.rmBtn').css('display','none');
-                        // enumCount1 = enumCount - 1; 
-                        // $('#cancel_div'+enumCount1).empty();
-                        if(hid_newqtypeflag == 2)
-                        {
-                           // var current_step_count = $('#hid_current_step_count').val();
-                           $('#div_step_'+stepCount).append(html); 
-                        }       
-                    }
-                    else
+                    $('.rmBtn').css('display','none');
+                    // enumCount1 = enumCount - 1; 
+                    // $('#cancel_div'+enumCount1).empty();
+                    if(hid_newqtypeflag == 2)
                     {
-                        alert('Sorry, You can not add Building Blocks Here!');
-                        return false;
-                    }
+                       // var current_step_count = $('#hid_current_step_count').val();
+                       $('#div_step_'+stepCount).append(html); 
+                    }       
                 }
                 else
                 {
-                    alert('Sorry, You have to add QType First!');
+                    alert('Sorry, You can not add Building Blocks Here!');
                     return false;
                 }
             }
+            else
+            {
+                alert('Sorry, You have to add QType First!');
+                return false;
+            }
+        }
         // =================================================================
         // END : Function for adding building-block
         // =================================================================
+
+        function init()
+        {
+            var_arr  = [];
+            var html ='Consider ';
+            qFormat  = ar.Question_Format;
+
+            var var_count =1;
+            for(var i=0;i<qFormat.length;i++)
+            {
+                console.log(qFormat[i].Name);
+                if(qFormat[i].Name =='op_multiply')
+                {
+                     html +=' * ';
+                }else
+                {
+                    var_arr.push('v'+var_count);
+                    html += 'v'+var_count++;
+                    var_arr.push();
+                }
+            }
+            
+            $('#div_step_'+stepCount).append(html); 
+        } 
 
         function customBlock()
         {
@@ -1113,11 +1206,26 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                 complete: function()
                 {}
             });
-            
-         }
-        
-         
-        </script>
+        }
+
+        function ShowPopup(param_val, building_block_name, function_name)
+        {
+            if(param_val=='bb_mixed_to_improper')
+            {
+                var html ='';
+                html +='<select onchange="add_building_block(\''+param_val+'\',\''+building_block_name+'\', \''+function_name+'\', this.value)" >';
+                    html +='<option value="" disabled selected>Select Variable</option>'
+                    for(var i=1;i<=var_arr.length;i++)
+                    {
+                        html +='<option value="v'+i+'">v'+i+'</option>'
+                    }
+                html +='</select>';
+
+                $('.modal-body').html(html);
+                $('#modal').modal('toggle');
+            }
+        }
+    </script>
 
 
     <script type="text/javascript" src="js/ASCII.js"></script>
