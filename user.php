@@ -178,6 +178,9 @@ $output['v2'] ="1,3,3";
 
 $k = 1;
 $v = 'n';
+
+$m = 0;
+$ar1 = array('FNum','FDenum');
 foreach ($func_arr as $step) {
     foreach($step['BB_Format'] as $format)
     {
@@ -185,36 +188,31 @@ foreach ($func_arr as $step) {
             $frmt = $format['Format'][0];
             $out  = shellExcecute($frmt['BB_Function'],@$output[$frmt['Input']]);
             
-            if($frmt['BB_Function']=='multiplyFactors') echo $frmt['BB_Function'];
+            if($frmt['BB_Function']=='multiplyFactors') 
+            {
+                // echo $frmt['BB_Function'];
+                // echo $out;
+                $output[$ar1[$m]] = $out;
+                $m++;
+            }
             
             if($frmt['BB_Function']=='cancelCommonFactors')
             {
-                $p = @$output['FConNumFactors'].' '.@$output['FConDenumFactors'];
-                $out  = shellExcecute($frmt['BB_Function'],@$p);
-                 $out  = rmSquare($out);
-                if($frmt['BB_Function']=='multiplyFactors') echo $frmt['BB_Function'];echo $out;
-                $out  = rmSquare($out);
-                echo '------------';
-                $bb = explode('<br>',$out);
+               $p = @$output['FConNumFactors'].' '.@$output['FConDenumFactors'];
 
-                if(!isset($output['FNum']) && $output['FDenum']=="")
-                {
-                     $output['FNum'] =$bb[0];
-                }
-
-                if(!isset($output['FDenum']) && $output['FDenum']=="")
-                {
-                     $output['FDenum'] =$bb[1];
-                }
-               
-
-               
-             
-                 // echo $result_num  = strNum($out); echo '<br>';
+               $out  = shellExcecute($frmt['BB_Function'],@$p);
                  
+
+                
+                $result_num  = strNum($out);
+                
+               
+                $output['FNumFactors']   = $result_num;
+                $output['FDenumFactors'] = $result_deno;
             }
            if($frmt['BB_Function'] =='computeListOfPrimeFactors')
             {
+                // echo $out;
                 $result_num  = strNum($out);
                 $result_deno = strDen($out);
                 
@@ -227,6 +225,14 @@ foreach ($func_arr as $step) {
             {
                 $output[$frmt['Output']] = $output['f'.$v.'1'].','.$output['f'.$v.'2'];
                 $v = 'd';
+            }
+            elseif($frmt['BB_Function'] =='convertImproperToMixedFraction')
+            {
+                $p = @$output['FNum'].' '.@$output['FDenum'];
+                $out  = shellExcecute($frmt['BB_Function'],@$p);
+                $out  = rmSquare($out);
+                $output['FResult'] = $out;
+                
             }else
             { 
                 $out  = rmSquare($out);
@@ -235,6 +241,10 @@ foreach ($func_arr as $step) {
     }
 }
 
+unset($output['fn3']);
+unset($output['fd3']);
+unset($output['fn4']);
+unset($output['fd4']);
 var_dump($output);
 
 ?>
