@@ -205,6 +205,7 @@ foreach ($func_arr as $step) {
 
                 
                 $result_num  = strNum($out);
+                $result_deno  = strDen($out);
                 
                
                 $output['FNumFactors']   = $result_num;
