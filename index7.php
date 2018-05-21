@@ -61,7 +61,7 @@ echo "Multiply factors of numerators (v1 & v2) = ".$result6."<br>";
 
 
 
-echo $param7 = "C:/Python27/python.exe satish-test.py multiplyFactors $result5_deno";
+$param7 = "C:/Python27/python.exe satish-test.py multiplyFactors $result5_deno";
 
 $result7 = Str_to_remove_square(shell_exec($param7));
 

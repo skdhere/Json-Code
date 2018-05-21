@@ -1,47 +1,46 @@
 <?php
     $json_data = file_get_contents('abc.json');
     $json_arr  = json_decode($json_data,true);
+    
 
-    // remove [] and space from given string from python output
     function rmSquare($str)
     {
         $final_str = trim((str_replace(array('[',']',' '),array('','',''), $str)));
         return $final_str;
     }
 
-    // Convert string to numerator using the break(<br>) seperator
     function strNum($num1)
     {
         $final_num = rmSquare(substr($num1, 0,strpos($num1, '<br>')));
         return $final_num;
     }
 
-    // Convert string to denominator using the break(<br>) seperator
     function strDen($den1)
     {
         $final_den = rmSquare(str_replace('<br>', '',strstr($den1, '<br>')));
         return $final_den;
     }
 
-    $func_arr  = array(); // steps array
-    // getting steps from json object n pushing into func_arr
-    foreach($json_arr['Solutions'][0]['Steps'] as $steps) 
+
+
+    $func_arr  = array();
+    foreach($json_arr['Solutions'][0]['Steps'] as $steps)
     {
         array_push($func_arr,$steps);
     }
+    
+    $var_arr = array();
 
-    $output  = array();
-
-    // set v1 and v2 in output array
-    function setVariables($w,$n,$d) 
+    $output    = array();
+    function setVariables($w,$n,$d) // set v1 and v2 in output array
     {
         global $output;
-        
+        global $var_arr;
         $v  = $n.','.$d.','.$w;
+
         $output['v'.(count($output)+1)]  = $v;
     }
 
-    // get html content for mixed fraction
     function getMixedFraction()
     {
         $w = rand(1,20);
@@ -88,7 +87,7 @@
         return $html_data;
     }
 
-    // get html content for multiply operator
+    
     function getOperator($op_val)
     {
         $html_data = '';    
@@ -110,8 +109,9 @@
 
         return $html_data;
     }
+
+
     
-    // execute paython request 
     function shellExcecute($func_name,$param)
     {
         $url = "C:/Python27/python.exe satish-test.py $func_name $param";
@@ -130,13 +130,10 @@
 </head>
 <body>
 
-<!-- Display question type name -->
 <div class="jumbotron text-center">
     <h1 id="qtype_name"><?php echo ucfirst($json_arr['Qtype_Name']); ?></h1>
 </div>
 
-
-<!-- Display question-->
 <div class="container-fluid">
     <div id="question" class="row">
         <div class="col-md-2">
@@ -168,15 +165,14 @@
     </div>
 </div>
 <?php
+
+// $output['v1'] ="3,4,3";
+// $output['v2'] ="1,3,3";
+
 $k = 1;   // to set fn1 ,fn2
 $v = 'n'; // to set fd and fn
-$z = 1;
 
-
-// getting all step from func_arr for solution
 foreach ($func_arr as $step) {
-
-    // getting building blocks from step
     foreach($step['BB_Format'] as $format)
     {
         $frmt = $format['Format'][0];
@@ -190,17 +186,17 @@ foreach ($func_arr as $step) {
             foreach ($t as $value) {
                  $p  .= $output[$value].' ';
             }
+
+            $out                     = shellExcecute($frmt['BB_Function'],@$p); //call to paython file
             
-            $out = shellExcecute($frmt['BB_Function'],@$p); //call to paython file
-            
-            $o   = explode(' ',$frmt['Output']); // getting number of output param like `fnum fdenum`
+            $o                 = explode(' ',$frmt['Output']);
            
             if(count($o)>1)
             {
-                $result_num    = strNum($out); // to get numerator from passed string
-                $result_deno   = strDen($out); // to get denominator from passed string
-                
-                $output[$o[0]] = $result_num;
+                $result_num              = strNum($out); // to get numerator from string
+                $result_deno             = strDen($out);
+
+                $output[$o[0]]   = $result_num;
                 $output[$o[1]] = $result_deno;
             }else
             {
@@ -213,8 +209,8 @@ foreach ($func_arr as $step) {
             $result_num      = strNum($out);
             $result_deno     = strDen($out);
             
-            $output['fn'.$k] = $result_num;  // fn1 fn2
-            $output['fd'.$k] = $result_deno; // fd1 fd2
+            $output['fn'.$k] = $result_num; // fn1 fn2
+            $output['fd'.$k] = $result_deno;
             $k++;
 
         }
@@ -226,79 +222,34 @@ foreach ($func_arr as $step) {
         }
         elseif($frmt['BB_Function'] =='convertImproperToMixedFraction')
         {
-            $t = explode(' ',$frmt['Input']); // get parameter of input 
-            $p = '';
+            $t                 = explode(' ',$frmt['Input']);
+            $p                 = '';
 
             foreach ($t as $value) {
                  $p  .= $output[$value].' ';
             }
 
             $out               = shellExcecute($frmt['BB_Function'],@$p);//call to paython file
-            $out               = rmSquare($out); // remove [] and space
+            $out               = rmSquare($out); // remove []
             $output['FResult'] = $out;
             
         }else
         { 
-            $out                     = rmSquare($out); // remove [] and space
+            $out                     = rmSquare($out); // remove []
             $output[$frmt['Output']] = $out;
         }
     }
-
-    $output['display'.$z] = json_encode($step['Display']);
-    // $output['display'.$z] = $step['Display'];
-    $z++;
 }
 
 unset($output['fn3']);
 unset($output['fd3']);
 unset($output['fn4']);
 unset($output['fd4']);
-//var_dump($output);
-$solution_json = json_encode($output);
-
-// print_r($solution_json);
+var_dump($output);
 
 ?>
-<div style="padding:40px">
 <br>
-  <h5 align="center">v1 : <?php echo $output['v1']; ?></h5>
-  <h5 align="center">v2 : <?php echo $output['v2']; ?></h5>
-  <h5>Step 1 :</h5><br>
-  convert mixed to improper fraction (v1)            : <?php echo $output['tv1']; ?><br>
-  convert mixed to improper fraction (v2)            : <?php echo $output['tv2']; ?><br>
-
-  Display :                                          : <?php echo $output['display1'];?><br><br>
   
-  <h5>Step 2 :</h5><br>
-  Prime Factor for numerator Variable 1              : <?php echo $output['fn1']; ?><br>
-  Prime Factor for denominator Variable 1            : <?php echo $output['fd1']; ?><br>
-  Prime Factor for numerator Variable 2              : <?php echo $output['fn2']; ?><br>
-  Prime Factor for denominator Variable 2            : <?php echo $output['fd2']; ?><br>
-  Display :                                          : <?php echo $output['display2'];?><br><br>
-
-  <h5>Step 3 :</h5><br>
-  Concatenation of numerators (v1 &amp; v2)          : <?php echo $output['FConNumFactors']; ?><br>
-  Concatenation of numerators (v1 &amp; v2)          : <?php echo $output['FConDenumFactors']; ?><br>
-  Display :                                          : <?php echo $output['display3'];?><br><br>
-  
-  <h5>Step 4 :</h5><br>
-  Cancel common factors of numerators (v1 &amp; v2)  : <?php echo $output['FNumFactors']; ?><br>
-  Cancel common factors of denominator (v1 &amp; v2) : <?php echo $output['FDenumFactors']; ?><br>
-  Display :                                          : <?php echo $output['display4'];?><br><br>
-  
-  <h5>Step 5 :</h5><br>
-  Multiply factors of numerators (v1 &amp; v2)       : <?php echo $output['FNum']; ?><br>
-  Multiply factors of denominator (v1 &amp;v2)       : <?php echo $output['FDenum']; ?><br><br>
-  Display :                                          : <?php echo $output['display5'];?><br><br>
-  
-  <h5>Step 6 :</h5><br>
-  Final Result (v1 &amp; v2)                         : <?php echo $output['FResult']; ?></br></br>
-  Display :                                          : <?php echo $output['display6'];?><br><br>
-
-</br>
-</div>
-
- 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3">
@@ -335,6 +286,7 @@ $solution_json = json_encode($output);
                         <li class="list-group-item draggable">-</li>
                         <li class="list-group-item draggable">%</li>
                         <li class="list-group-item draggable">`int`</li>
+                        
                     </ul>
                 <h6>Text</h6>
                 <input type="text" class="form-control" name="">
@@ -344,7 +296,11 @@ $solution_json = json_encode($output);
         </div>
         <div class="col-md-7">
             <div id="div_editor_contain" class="col-md-12 droppable" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:auto;">
-                <div id="div_qtype" class="row p-3"></div>
+                <div id="div_qtype" class="row p-3">
+                    
+                        
+                    
+                </div>
             </div>
              <div id="jasonData"></div>
         </div>
@@ -356,6 +312,9 @@ $solution_json = json_encode($output);
                     Add Steps
                 </button>
                 <hr>
+<!-- 
+                <button class="btn btn-primary btn-block m-1">View Qtype</button>
+                <button class="btn btn-primary btn-block m-1">New Qtype</button> -->
             </div>
         </div>
     </div>
