@@ -71,7 +71,7 @@
                   {
                     "BB_Function":"computeListOfPrimeFactors",
                     "Input":"tv1",
-                    "Output":"fn1,fd1"
+                    "Output":"fn1 fd1"
                   }
                 ]
               },

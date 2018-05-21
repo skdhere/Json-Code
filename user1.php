@@ -1,21 +1,45 @@
 <?php
     $json_data = file_get_contents('abc.json');
     $json_arr  = json_decode($json_data,true);
+    
 
-    echo $json_arr['Qtype_Name'];
+    function rmSquare($str)
+    {
+        $final_str = trim((str_replace(array('[',']',' '),array('','',''), $str)));
+        return $final_str;
+    }
 
-    echo count($json_arr['Solutions'][0]['Steps']);
+    function strNum($num1)
+    {
+        $final_num = rmSquare(substr($num1, 0,strpos($num1, '<br>')));
+        return $final_num;
+    }
+
+    function strDen($den1)
+    {
+        $final_den = rmSquare(str_replace('<br>', '',strstr($den1, '<br>')));
+        return $final_den;
+    }
+
+
 
     $func_arr  = array();
     foreach($json_arr['Solutions'][0]['Steps'] as $steps)
     {
-        foreach($steps['BB_Format'] as $step_format)
-        {
-            array_push($func_arr,$step_format['Format'][0]['BB_Function']);
-        }
+        array_push($func_arr,$steps);
     }
+    
+    $var_arr = array();
 
-    var_dump($func_arr);
+    $output    = array();
+    function setVariables($w,$n,$d)
+    {
+        global $output;
+        global $var_arr;
+        $v  = $n.','.$d.','.$w;
+
+        $output['v'.(count($output)+1)]  = $v;
+    }
 
     function getMixedFraction()
     {
@@ -23,29 +47,26 @@
         $n = rand(1,9);
         $d = rand(1,9);
 
-        if($n < $d)
+        //==============Start : Done by satish 13may2018===========//
+        if($n > $d)
         {
-            $n = $d;
-            $d = $n;
-            if($n == $d)
+            $temp = $n;
+            $n    = $d;
+            $d    = $temp;
+        }
+        elseif($n == $d)
+        {
+            if($n==1) // check n and d is equal or not
             {
-                if($n == 9)
-                {
-                    $d = $d - 1;
-                }
-                else
-                {
-                    $n = $n + 1;
-                }
+                $d = $d + 1;
+            }else
+            {
+                $n = $n - 1;
             }
         }
-        else
-        {
-            if($n == $d)
-            {
-                $n = $n + 1;
-            }
-        }
+        //==============End : Done by satish 13may2018===========//
+
+        setVariables($w,$n,$d);
 
         $html_data = '';
 
@@ -63,10 +84,10 @@
                 $html_data .= '</tr>';
             $html_data .= '</table>';  
         $html_data .= '</div>';
-
         return $html_data;
     }
 
+    
     function getOperator($op_val)
     {
         $html_data = '';    
@@ -88,6 +109,16 @@
 
         return $html_data;
     }
+
+
+    
+    function shellExcecute($func_name,$param)
+    {
+        $url = "C:/Python27/python.exe satish-test.py $func_name $param";
+        $res = shell_exec($url);
+        return $res;
+    }
+
 
     session_start();
     session_destroy();
@@ -114,7 +145,7 @@
         </div>
         <div class="col-md-8">
             <div id="div_editor_contain" class="col-md-12 droppable">
-                <div class="row p-3">
+                <div class="row p-3" id="question">
                 <?php
                 foreach ($json_arr['Question_Format'] as $question) 
                 {
@@ -128,6 +159,9 @@
                         echo getOperator('op_multiply');
                     }
                 }
+
+                // $v1 = $var_arr[0];
+                // $v2 = $var_arr[1];
                 ?>
                 </div>
             </div>    
@@ -137,7 +171,84 @@
         </div>
     </div>
 </div>
+<?php
 
+$output['v1'] ="3,4,3";
+$output['v2'] ="1,3,3";
+
+$k = 1;
+$v = 'n';
+
+$m = 0;
+$ar1 = array('FNum','FDenum');
+foreach ($func_arr as $step) {
+    foreach($step['BB_Format'] as $format)
+    {
+        
+            $frmt = $format['Format'][0];
+            $out  = shellExcecute($frmt['BB_Function'],@$output[$frmt['Input']]);
+            
+            if($frmt['BB_Function']=='multiplyFactors') 
+            {
+                // echo $frmt['BB_Function'];
+                // echo $out;
+                $output[$ar1[$m]] = $out;
+                $m++;
+            }
+            
+            if($frmt['BB_Function']=='cancelCommonFactors')
+            {
+               $p = @$output['FConNumFactors'].' '.@$output['FConDenumFactors'];
+
+               $out  = shellExcecute($frmt['BB_Function'],@$p);
+                 
+
+                
+                $result_num  = strNum($out);
+                $result_deno  = strDen($out);
+                
+               
+                $output['FNumFactors']   = $result_num;
+                $output['FDenumFactors'] = $result_deno;
+            }
+           if($frmt['BB_Function'] =='computeListOfPrimeFactors')
+            {
+                // echo $out;
+                $result_num  = strNum($out);
+                $result_deno = strDen($out);
+                
+                $output['fn'.$k]     = $result_num;
+                $output['fd'.$k]     = $result_deno;
+                $k++;
+
+            }
+            elseif($frmt['BB_Function'] =='Concatenation')
+            {
+                $output[$frmt['Output']] = $output['f'.$v.'1'].','.$output['f'.$v.'2'];
+                $v = 'd';
+            }
+            elseif($frmt['BB_Function'] =='convertImproperToMixedFraction')
+            {
+                $p = @$output['FNum'].' '.@$output['FDenum'];
+                $out  = shellExcecute($frmt['BB_Function'],@$p);
+                $out  = rmSquare($out);
+                $output['FResult'] = $out;
+                
+            }else
+            { 
+                $out  = rmSquare($out);
+                $output[$frmt['Output']] = $out;
+            }
+    }
+}
+
+unset($output['fn3']);
+unset($output['fd3']);
+unset($output['fn4']);
+unset($output['fd4']);
+var_dump($output);
+
+?>
 <br>
   
 <div class="container-fluid">
@@ -187,29 +298,22 @@
         <div class="col-md-7">
             <div id="div_editor_contain" class="col-md-12 droppable" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px;overflow-y:auto;">
                 <div id="div_qtype" class="row p-3">
-                    <div class="col-md-12">
-                        <span class="badge badge-info badge-pill">Step 1:</span>
-                    </div>
+                    
+                </div>
+                <div id="div_stud_solution" class="row p-3">
+                    
                 </div>
             </div>
              <div id="jasonData"></div>
         </div>
         <div class="col-md-2">
             <div class="col-md-12" style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);height:500px">
-                <button class="btn btn-primary btn-block m-1">Add Initiations</button>
-                <button class="btn btn-primary btn-block m-1">Add Result</button>
-                <button class="btn btn-primary btn-block m-1" onclick="changeCurrentStepCount();">
-                    Add Steps
-                </button>
-                <input type="hidden" name="hid_cont_add_step_count" id="hid_cont_add_step_count" value="0">
-                <input type="hidden" name="hid_current_step_count" id="hid_current_step_count" value="1">
-                <button class="btn btn-primary btn-block m-1">Add Solutions</button>
+                <button class="btn btn-primary btn-block m-1" id="initBtn" onclick="init()">Add Initiations</button>
+                <button class="btn btn-primary btn-block m-1" onclick="changeCurrentStepCount();">Add Steps</button>
                 <hr>
+<!-- 
                 <button class="btn btn-primary btn-block m-1">View Qtype</button>
-                <button class="btn btn-primary btn-block m-1">New Qtype</button>
-                <input type="hidden" id="hid_newqtypeflag"  name="hid_newqtypeflag" value="0">
-                <button class="btn btn-primary btn-block m-1">Save Qtype</button>
-                <button class="btn btn-primary btn-block m-1">Delete Qtype</button>
+                <button class="btn btn-primary btn-block m-1">New Qtype</button> -->
             </div>
         </div>
     </div>
@@ -221,200 +325,237 @@
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript">
 
-        JsonArr = {
+        ar = {
               "QType": 1,
               "Qtype Name": "Multiplication of 2 Mixed fraction",
               "Question": [],
               "Solution":[],
             }
-        isSoltion = false;
+        isSoltion = 0;
+        stepCount = 0;
         enumCount = 0;
-
-
-        //set blank when adding new question type
-        function getRmElement(btnCount)
-        {
-            $('#div'+btnCount).remove();
-
-            var len = (JsonArr.Question.length) - 1;
-
-            JsonArr.Question.splice(len,1);
-
-            $('#rmBtn'+(btnCount-1)).css('display','block');
-
-            arr = JSON.stringify(JsonArr);
-
-            $('#jasonData').html(arr);
-        }
         
-        function changeCurrentStepCount()
-        {
-            new_step_count         = parseInt(current_step_count) + 1;
-            $('#hid_current_step_count').val(new_step_count);
-            
-            data = "<hr><div id='div_step_"+new_step_count+"' class='row p-3'><div class='col-md-12'><span class='badge badge-info badge-pill'>Step "+new_step_count+":</span></div></div>";
-            $('#div_editor_contain').append(data);
-        }
+        // =================================================================
+        // START : Function For Capitalize The First Letter Of A String
+        // =================================================================
+            function jsUcfirst(string) 
+            {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+        // =================================================================
+        // END : Function For Capitalize The First Letter Of A String
+        // =================================================================
 
-        function Improper(param_val, hid_val)
-        {
-            enumCount++;
-            html = '';
-             html = '<div id="div'+enumCount+'"  class="row">';
-             html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
-            html += '</div>';
+        // =================================================================
+        // START : Function For Show and Hide Content 
+        // =================================================================
+            function showContent(id)
+            {
+                $('#'+id).css('display', 'block');
+            }
 
-            html += '<div class="col-md-5">';
-                
-                html += '<table>';
-                    html += '<tr>';
-                        html += '<td>';
-                            html += '<div><input type="text" name="v1n1" id="v1n1" class="form-control" name=""></div>';
-                            html += '<hr>';
-                            html += '<div><input type="text" name="v1d1" id="v1d1" class="form-control" name=""></div>';
-                        html += '</td>';
-                    html += '</tr>';
-                html += '</table>';  
-            html += '</div>';
+            function hideContent(id)
+            {
+                $('#'+id).css('display', 'none');
+            }
+        // =================================================================
+        // END : Function For Show and Hide Content 
+        // =================================================================
 
-           
-            html += MultiplyQuestion();
+        // =================================================================
+        // START : Function For Initiation of Question In the Solution Part
+        // =================================================================
+            function init()
+            {
 
+                var question = $('#question').html();
+                $('#div_qtype').append('<div class="col-md-12"><span class="badge badge-info badge-pill">Initiations:</span></div>');
+                $('#div_qtype').append(question);
 
-            html += '<div  class="col-md-5">';
-               
-                html += '<table>';
-                    html += '<tr>';
-                        html += '<td>';
-                            html += '<div><input type="text" name="v2n2" id="v2n2" class="form-control" name=""></div>';
-                            html += '<hr>';
-                            html += '<div><input type="text" name="v2d2" id="v2d2" class="form-control" name=""></div>';
-                        html += '</td>';
-                    html += '</tr>';
-                html += '</table>';  
-            html += '</div>';
+                $('#initBtn').css('display','none');
+                console.log($('#div_qtype').length);
+                // return false;
+            }
+        // =================================================================
+        // END : Function For Initiation of Question In the Solution Part
+        // =================================================================
 
-            html += '<button class="btn btn-success" style="padding:0px" onclick="">Check </button>';
+        // =================================================================
+        // START : Remove Element From Student Solution Part
+        // =================================================================
+            //set blank when adding new question type
+            function getRmElement(btnCount)
+            {
+                $('#div'+btnCount).remove();
 
-            html += '</div>';
+                var len = (ar.Question.length) - 1;
 
-            $('.rmBtn').css('display','none');
+                ar.Question.splice(len,1);
 
-            $('#div_qtype').append(html);
-        }
+                $('#rmBtn'+(btnCount-1)).css('display','block');
 
-        function MixedQuestion(param_val, hid_val)
-        {
+                arr = JSON.stringify(ar);
 
-            var w = parseInt(Math.random().toFixed(2)*100);
-            var n = parseInt(Math.random().toFixed(2)*100);
-            var d = parseInt(Math.random().toFixed(2)*100);
+                $('#jasonData').html(arr);
+            }
+        // =================================================================
+        // END : Remove Element From Student Solution Part
+        // =================================================================
 
-            var da = JSON.stringify({'w':3});
-            $.ajax({
-                url: "test-satish.py?",
-                type: "POST",
-                data: { 'parameter1': 'value1', 'parameter2': 'value2' },
-                                   
-                success: function(response) 
+        // =================================================================
+        // START : Function For Adding New Step inside the Current Solution
+        // =================================================================
+            function changeCurrentStepCount()
+            {
+                // console.log($('.div_qtype').has('div').length);
+                var chkIsInit = $('#div_qtype').has('div').length;
+                if(chkIsInit != 0)
                 {
-                    console.log(response);
-                    json = JSON.parse(response);
-                    $('#qtype_name').html(json.Qtype_Name);
-                    showQuestion(json);
-                },
-                error: function (request, status, error) 
-                {},
-                complete: function()
-                {}
-            });
+                    // console.log('1');
+                    var stepName = prompt("Please Enter Step Name:");
+                    if (stepName != null)
+                    {
+                        if(stepName != '')
+                        {
+                            stepCount++;
+                            data = '<div id="div_step_'+stepCount+'" class="row">';
+                                data += '<hr><div class="col-md-3">';
+                                    data += '<span class="badge badge-info badge-pill">';
+                                        data += 'Step: '+stepCount;
+                                    data += '</span>';
+                                data += '</div>';
+                                data += '<div class="col-md-9">';
+                                    data += '<h2 id="qtype_name">'+jsUcfirst(stepName)+'</h2>';
+                                data += '</div>';
+                            data += '</div>';
+                            data += '<div style="clear:both;"></div>'
+                            $('#div_stud_solution').append(data);
+                            // createCurrentStepJson();
+                        }
+                        else
+                        {
+                            alert('Please Insert the Valid Step name');
+                            return false;
+                        }
+                    }   
+                }
+                else
+                {
+                    // console.log('2');
+                    alert('Sorry, Please Initiate First!');
+                    return false;
+                }
+                return false;
 
-            html ='';
-            html += '<table>';
-                html += '<tr>';
-                    html += '<td>';
-                        html += '<div>'+w+'</div>';
-                    html += '</td>';
-                    html += '<td>';
-                        html += '<div>'+n+'</div>';
-                        html += '<hr>';
-                        html += '<div>'+d+'</div>';
-                    html += '</td>';
-                html += '</tr>';
-            html += '</table>';  
-            
-            return html;
-            
-        }
+                
 
-        function MultiplyQuestion(param_val, hid_val)
-        {       
-            
-            html_data ='';
-            html_data += '<table>';
-                html_data += '<tr>';
-                    html_data += '<td>';
-                        html_data += '<div>&nbsp;</div>';
-                        html_data += '<h3>X</h3>';
-                        html_data += '<div>&nbsp;</div>';
-                    html_data += '</td>';
-                html_data += '</tr>';
-            html_data += '</table>';  
-            return html_data;
-        }
+                // new_step_count         = parseInt(current_step_count) + 1;
+                // $('#hid_current_step_count').val(new_step_count);
+                
+                // data = "<hr><div id='div_step_"+new_step_count+"' class='row p-3'><div class='col-md-12'><span class='badge badge-info badge-pill'>Step "+new_step_count+":</span></div></div>";
+                // $('#div_editor_contain').append(data);
+            }
+        // =================================================================
+        // END : Function For Adding New Step inside the Current Solution
+        // =================================================================
 
-        function Mixed(param_val, hid_val)
-        {
-            var current_step_count = parseInt($('#hid_current_step_count').val());
-            var html               = '';
-            var txt_hid_val        = parseInt($('#'+hid_val).val());
-            txt_hid_val            = parseInt(txt_hid_val) + 1;
-            $('#'+hid_val).val(txt_hid_val);
-            
-            enumCount++;
-            
-            html += '<div id="div'+enumCount+'" class="col-md-5">';
-                html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
+        // =================================================================
+        // START : Add HTML Code, ENUM
+        // =================================================================
+            function Improper(param_val, hid_val)
+            {
+                enumCount++;
+                html = '';
+                 html = '<div id="div'+enumCount+'"  class="row">';
+                 html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
                     html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
                 html += '</div>';
+
+                html += '<div class="col-md-5">';
+                    
+                    html += '<table>';
+                        html += '<tr>';
+                            html += '<td>';
+                                html += '<div><input type="text" name="v1n1" id="v1n1" class="form-control numsonly" name="" onkeypress="return numsonly(event)" maxlength="3" id="v1n1"></div>';
+                                html += '<hr>';
+                                html += '<div><input type="text" name="v1d1" id="v1d1" class="form-control numsonly" onkeypress="return numsonly(event)" name="" maxlength="3" id="v1d1"></div>';
+                            html += '</td>';
+                        html += '</tr>';
+                    html += '</table>';  
+                html += '</div>';
+
+               
+                html += MultiplyQuestion();
+
+
+                html += '<div  class="col-md-5">';
+                   
+                    html += '<table>';
+                        html += '<tr>';
+                            html += '<td>';
+                                html += '<div><input type="text" name="v2n2" id="v2n2" class="form-control" name="" onkeypress="return numsonly(event)" maxlength="3" id="v2n2"></div>';
+                                html += '<hr>';
+                                html += '<div><input type="text" name="v2d2" id="v2d2" class="form-control" name="" onkeypress="return numsonly(event)" maxlength="3"  id="v2d2"></div>';
+                            html += '</td>';
+                        html += '</tr>';
+                    html += '</table>';  
+                html += '</div>';
+
+                html += '<button class="btn btn-success" style="padding:0px" onclick="check()">Check </button>';
+
+                html += '</div>';
+
+                $('.rmBtn').css('display','none');
+
+                $('#div_step_'+stepCount).append(html);
+            }
+
+            function MixedQuestion(param_val, hid_val)
+            {
+
+                var w = parseInt(Math.random().toFixed(2)*100);
+                var n = parseInt(Math.random().toFixed(2)*100);
+                var d = parseInt(Math.random().toFixed(2)*100);
+
+                var da = JSON.stringify({'w':3});
+                $.ajax({
+                    url: "test-satish.py?",
+                    type: "POST",
+                    data: { 'parameter1': 'value1', 'parameter2': 'value2' },
+                                       
+                    success: function(response) 
+                    {
+                        console.log(response);
+                        json = JSON.parse(response);
+                        $('#qtype_name').html(json.Qtype_Name);
+                        showQuestion(json);
+                    },
+                    error: function (request, status, error) 
+                    {},
+                    complete: function()
+                    {}
+                });
+
+                html ='';
                 html += '<table>';
                     html += '<tr>';
                         html += '<td>';
-                            html += '<div><input type="" class="form-control" name=""></div>';
+                            html += '<div>'+w+'</div>';
                         html += '</td>';
                         html += '<td>';
-                            html += '<div><input type="" class="form-control" name=""></div>';
+                            html += '<div>'+n+'</div>';
                             html += '<hr>';
-                            html += '<div><input type="" class="form-control" name=""></div>';
+                            html += '<div>'+d+'</div>';
                         html += '</td>';
                     html += '</tr>';
                 html += '</table>';  
-            html += '</div>';
+                
+                return html;
+            }
 
-            $('.rmBtn').css('display','none');
-            $('#div_qtype').append(html);
-        }
-
-        function Multiply(param_val, hid_val)
-        {
-
-            var current_step_count = parseInt($('#hid_current_step_count').val());
-            var html               = '';
-            var txt_hid_val        = parseInt($('#'+hid_val).val());
-            txt_hid_val            = parseInt(txt_hid_val) + 1;
-            $('#'+hid_val).val(txt_hid_val);
-            
-            var hid_newqtypeflag = $('#hid_newqtypeflag').val();
-
-            enumCount++;
-            
-            html_data = '';
-
-            html_data += '<div id="div'+enumCount+'" class="col-md-2" align="center">';
-                html_data += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                    html_data += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
-                html_data += '</div>';
+            function MultiplyQuestion(param_val, hid_val)
+            {
+                html_data ='';
                 html_data += '<table>';
                     html_data += '<tr>';
                         html_data += '<td>';
@@ -424,105 +565,184 @@
                         html_data += '</td>';
                     html_data += '</tr>';
                 html_data += '</table>';  
-            html_data += '</div>';
-
-            $('.rmBtn').css('display','none');
-            // enumCount1 = enumCount - 1; 
-            // $('#cancel_div'+enumCount).html('');
-            $('#div_qtype').append(html_data);
-           
-        }
-
-        function customBlock()
-        {
-            var n = prompt("Number of numerator");
-            var d = prompt("Number of denominator");
-
-            if(isNaN(n) || isNaN(n))
-            {
-                alert('numerator and denominator are not valid');
-                customBlock();
-                return false;
+                return html_data;
             }
 
-            var o = prompt("Operator");
-
-            var html ='';
-
-            html +='<div style="text-align: center;" class="col-md-5">';
-            html +='<div>'
-            for(var i = 1;i<=n;i++)
+            function Mixed(param_val, hid_val)
             {
-                html +='<input type="text" style="width:20px"/> ';
-                if(i !=n)
+                var current_step_count = parseInt($('#hid_current_step_count').val());
+                var html               = '';
+                var txt_hid_val        = parseInt($('#'+hid_val).val());
+                txt_hid_val            = parseInt(txt_hid_val) + 1;
+                $('#'+hid_val).val(txt_hid_val);
+                
+                enumCount++;
+                
+                html += '<div id="div'+enumCount+'" class="col-md-5">';
+                    html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
+                        html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                    html += '</div>';
+                    html += '<table>';
+                        html += '<tr>';
+                            html += '<td>';
+                                html += '<div><input type="" class="form-control numsonly" name=""></div>';
+                            html += '</td>';
+                            html += '<td>';
+                                html += '<div><input type="" class="form-control numsonly" name=""></div>';
+                                html += '<hr>';
+                                html += '<div><input type="" class="form-control numsonly" name=""></div>';
+                            html += '</td>';
+                        html += '</tr>';
+                    html += '</table>';  
+                html += '</div>';
+
+                $('.rmBtn').css('display','none');
+                $('#div_step_'+stepCount).append(html);
+            }
+
+            function Multiply(param_val, hid_val)
+            {
+
+                var current_step_count = parseInt($('#hid_current_step_count').val());
+                var html               = '';
+                var txt_hid_val        = parseInt($('#'+hid_val).val());
+                txt_hid_val            = parseInt(txt_hid_val) + 1;
+                $('#'+hid_val).val(txt_hid_val);
+                
+                var hid_newqtypeflag = $('#hid_newqtypeflag').val();
+
+                enumCount++;
+                
+                html_data = '';
+
+                html_data += '<div id="div'+enumCount+'" class="col-md-2" align="center">';
+                    html_data += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
+                        html_data += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                    html_data += '</div>';
+                    html_data += '<table>';
+                        html_data += '<tr>';
+                            html_data += '<td>';
+                                html_data += '<div>&nbsp;</div>';
+                                html_data += '<h3>X</h3>';
+                                html_data += '<div>&nbsp;</div>';
+                            html_data += '</td>';
+                        html_data += '</tr>';
+                    html_data += '</table>';  
+                html_data += '</div>';
+
+                $('.rmBtn').css('display','none');
+                $('#div_step_'+stepCount).append(html_data);
+            }
+        // =================================================================
+        // END : Add HTML Code, ENUM
+        // =================================================================
+
+        // =================================================================
+        // START : Generate Custom Blocks OR Elements
+        // =================================================================
+            function customBlock()
+            {
+                var n = prompt("Number of numerator");
+                var d = prompt("Number of denominator");
+
+                if(isNaN(n) || isNaN(n))
                 {
-                    html +=' '+o+' ';
+                    alert('numerator and denominator are not valid');
+                    customBlock();
+                    return false;
                 }
-            }
-            html +='</div>'
-            html +='<hr>';
-             html +='<div>';
-            for(var i = 1;i<=d;i++)
-            {
-                html +='<input type="text" style="width:20px"/> ';
-                if(i !=d)
+
+                var o = prompt("Operator");
+
+                var html ='';
+
+                html +='<div style="text-align: center;" class="col-md-5">';
+                html +='<div>'
+                for(var i = 1;i<=n;i++)
                 {
-                    html +=' '+o+' ';
+                    html +='<input type="text" style="width:20px"/> ';
+                    if(i !=n)
+                    {
+                        html +=' '+o+' ';
+                    }
                 }
-            }
-             html +='</div>'
-             html +='</div>'
-             var current_step_count = parseInt($('#hid_current_step_count').val());
-            $('#div_step_'+current_step_count).append(html);
-        }
-
-
-        function loadQuestion()
-        {
-            $.ajax({
-                url: "userAction.php?",
-                type: "POST",
-                contentType: "application/json; charset=utf-8",                     
-                success: function(response) 
+                html +='</div>'
+                html +='<hr>';
+                 html +='<div>';
+                for(var i = 1;i<=d;i++)
                 {
-                    json = JSON.parse(response);
-                    $('#qtype_name').html(json.Qtype_Name);
-                    showQuestion(json);
-                },
-                error: function (request, status, error) 
-                {},
-                complete: function()
-                {}
-            });
-        }
+                    html +='<input type="text" style="width:20px"/> ';
+                    if(i !=d)
+                    {
+                        html +=' '+o+' ';
+                    }
+                }
+                 html +='</div>'
+                 html +='</div>'
+                 var current_step_count = parseInt($('#hid_current_step_count').val());
+                $('#div_step_'+current_step_count).append(html);
+            }
+        // =================================================================
+        // END : Generate Custom Blocks OR Elements
+        // =================================================================
+
+        // =================================================================
+        // START : Load Random Questions
+        // =================================================================
+            function loadQuestion()
+            {
+                $.ajax({
+                    url: "userAction.php?",
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",                     
+                    success: function(response) 
+                    {
+                        json = JSON.parse(response);
+                        $('#qtype_name').html(json.Qtype_Name);
+                        showQuestion(json);
+                    },
+                    error: function (request, status, error) 
+                    {},
+                    complete: function()
+                    {}
+                });
+            }
+        // =================================================================
+        // END : Load Random Questions
+        // =================================================================
        
-        // loadQuestion();
-
-        function showQuestion(json)
-        {
-            var variable = json.Question;
-            var html     = '';
-            for(var i = 0;i<variable.length;i++)
+        // =================================================================
+        // START : Show that Random Questions
+        // =================================================================
+            function showQuestion(json)
             {
-                if(variable[i].name =='Mixedfraction')
+                var variable = json.Question;
+                var html     = '';
+                for(var i = 0;i<variable.length;i++)
                 {
-                    html +='<div class="col-md-1">';
-                    html += MixedQuestion();
-                     html +='</div>';
+                    if(variable[i].name =='Mixedfraction')
+                    {
+                        html +='<div class="col-md-1">';
+                        html += MixedQuestion();
+                         html +='</div>';
+                    }
+
+                    if(variable[i].name =='Multiply')
+                    {
+                        html +='<div class="col-md-1">';
+                        html += MultiplyQuestion();
+                        html +='</div>';
+                    }
                 }
 
-                if(variable[i].name =='Multiply')
-                {
-                    html +='<div class="col-md-1">';
-                    html += MultiplyQuestion();
-                    html +='</div>';
-                }
+                $('#question').html(html);
             }
-
-            $('#question').html(html);
-        }
-        </script>
+        // =================================================================
+        // END : Show that Random Questions
+        // =================================================================
+    </script>
 
     <script type="text/javascript" src="js/ASCII.js"></script>
+    <script type="text/javascript" src="custom.js"></script>
 </body>
 </html>

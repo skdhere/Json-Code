@@ -8,7 +8,7 @@ session_destroy();
 
 if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 {
-    $myfile = fopen($_POST['name'].".txt", "w") or die("Unable to open file!");
+    $myfile = fopen($_POST['name'].".json", "w") or die("Unable to open file!");
     $txt = $_POST['arr'];
     fwrite($myfile, $txt);
     fclose($myfile);
@@ -102,13 +102,17 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                                 </a>
                                 <input type="hidden" name="hid_enum_improper_fraction_count" id="hid_enum_improper_fraction_count" value="0">
                             </li>
-                            <li class="list-group-item" onclick="customBlock()">Custom ENUM</li>
+                            <!-- <li class="list-group-item">
+                                <a href="javascript:void(0)" class="draggable" onclick="customBlock()">
+                                    Custom ENUM
+                                </a>
+                            </li> -->
                         </ul>
                     </div>
                     <div class="col-md-6 text-center">
-                        <h6>Text</h6>
+                        <!-- <h6>Text</h6>
                         <input type="text" class="form-control" name="">
-                        <button class="btn btn-primary m-3">Add</button>
+                        <button class="btn btn-primary m-3">Add</button> -->
                     </div>
                 </div>
             </div>
@@ -485,7 +489,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                         if(QTypeName != '')
                         {
                             $('#hid_newqtypeflag').val(1);
-                            $('#div_qtype').html('<div class="col-md-2"><span class="badge badge-info badge-pill">QType: </span></div><div class="col-md-10"><h2 id="qtype_name">'+jsUcfirst(QTypeName)+'</h2></div>');
+                            $('#div_qtype').html('<div class="col-md-2"><span class="badge badge-info badge-pill">QType: </span></div><div class="col-md-10"><h4 id="qtype_name">'+jsUcfirst(QTypeName)+'</h4></div>');
                             
                             ar = {
                                 "QType": 1,
@@ -801,7 +805,7 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
                                         data += '</span>';
                                     data += '</div>';
                                     data += '<div class="col-md-9">';
-                                        data += '<h2 id="qtype_name">'+jsUcfirst(stepName)+'</h2>';
+                                        data += '<h2 id="step_name">'+jsUcfirst(stepName)+'</h2>';
                                     data += '</div>';
                                 data += '</div>';
                                 $('#div_editor_contain').append(data);
@@ -1000,40 +1004,49 @@ if(isset($_POST['saveFile']) && $_POST['saveFile']==1)
 
                 if(hid_newqtypeflag != 0)
                 {
-                    enumCount++;
-                    bbCount++;
-                    if(hid_newqtypeflag == 2)
+                    if(isSoltion != 0)
                     {
-                        // Calling Function For Creating JSON for Building Block
-                        createBuildingBlockJson(building_block_name, function_name);
-                    }
+                        enumCount++;
+                        bbCount++;
+                        if(hid_newqtypeflag == 2)
+                        {
+                            // Calling Function For Creating JSON for Building Block
+                            createBuildingBlockJson(building_block_name, function_name);
+                        }
 
-                    html = '<div id="div'+enumCount+'" class="col-md-12">';
-                        html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
-                            html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \'Solution\', \'BB_Format\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                        html = '<div id="div'+enumCount+'" class="col-md-12">';
+                            html += '<div id="cancel_div'+enumCount+'" style="height:15px;">';
+                                html += '<a href="javascript:void(0)" onclick="getRmElement('+enumCount+', \'Solution\', \'BB_Format\');" id="rmBtn'+enumCount+'" class="rmBtn"><i class="fa fa-times-circle" style="color:#f00;" aria-hidden="true"></i></a>';
+                            html += '</div>';
+                            html += '<table>';
+                                html += '<tr>';
+                                    html += getFormat(param_val, building_block_name, enumCount);
+                                html += '</tr>';
+                            html += '</table>'; 
+                            // html += '<div style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);overflow-y:auto;">';
+                            //     html += building_block_name;
+                            // html += '</div>';
                         html += '</div>';
-                        html += '<table>';
-                            html += '<tr>';
-                                html += getFormat(param_val, building_block_name, enumCount);
-                            html += '</tr>';
-                        html += '</table>'; 
-                        // html += '<div style="border:3px dashed #ccc;background-color: hsla(0,0%,100%,.25);overflow-y:auto;">';
-                        //     html += building_block_name;
-                        // html += '</div>';
-                    html += '</div>';
 
-                    $('.rmBtn').css('display','none');
-                    // enumCount1 = enumCount - 1; 
-                    // $('#cancel_div'+enumCount1).empty();
-                    if(hid_newqtypeflag == 2)
+                        $('.rmBtn').css('display','none');
+                        // enumCount1 = enumCount - 1; 
+                        // $('#cancel_div'+enumCount1).empty();
+                        if(hid_newqtypeflag == 2)
+                        {
+                           // var current_step_count = $('#hid_current_step_count').val();
+                           $('#div_step_'+stepCount).append(html); 
+                        }       
+                    }
+                    else
                     {
-                       // var current_step_count = $('#hid_current_step_count').val();
-                       $('#div_step_'+stepCount).append(html); 
+                        alert('Sorry, You can not add Building Blocks Here!');
+                        return false;
                     }
                 }
                 else
                 {
                     alert('Sorry, You have to add QType First!');
+                    return false;
                 }
             }
         // =================================================================
